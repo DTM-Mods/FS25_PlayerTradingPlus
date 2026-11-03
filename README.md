@@ -1,11 +1,11 @@
-# Utilities & Waste Management (FS25)
+# Player Trading+ (FS25)
 
-Farming Simulator 25 mod by PropaineX. Version 0.6.0.0 (work in progress).
+Farming Simulator 25 mod by PropaineX. Version 0.12.0.0 (work in progress).
 
 Farms trade **electricity, slurry and manure** with each other through invoices, in multiplayer or with
 several farms in singleplayer.
 
-- A **Utilities** page in the ESC menu. The farm manager sends a bill (to sell) or an order (to buy) to
+- A **Player Trading+** page in the ESC menu. The farm manager sends a bill (to sell) or an order (to buy) to
   another farm; that farm's manager accepts or declines. Only farm managers can trade.
 - Set an amount, or take **all of it** (everything the seller has in stock). Your own price per 1,000 liters
   (or kWh), with the game's price shown as a guide. One-off, or a standing contract every day or every week.

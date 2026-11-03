@@ -1,4 +1,4 @@
-# Utilities & Waste Management (FS25) - design
+# Player Trading+ (FS25) - design (was Utilities & Waste Management)
 
 Author PropaineX. Started 2026-10-23. Status 2026-10-24: all stages written; the depot (stage 3) is in 0.4.0.0
 (source only, not yet tried in game). File notes in CLAUDE.md.
@@ -9,7 +9,7 @@ Money only moves between farms (never from the game's market). Multiplayer first
 several farms too.
 
 Zip / mod name: `FS25_PlayerTradingPlus.zip` (FS25 mod names allow only letters, digits and `_`; the
-`&` in this folder name can't be in the zip name). Title: "Utilities & Waste Management".
+`&` in this folder name can't be in the zip name). Title: "Player Trading+ Pro Edition" (was "Utilities & Waste Management").
 
 ## Goods
 
@@ -90,7 +90,7 @@ and loading stops when the paid liters are collected or the seller's stock runs 
   equally between the owner and every farm that agreed to be a member. Placeable XML: dailyUpkeep 268.
 - **What each part does** (user, 2026-10-24): the tank's pump coupling = **slurry** pickup, the Farma 400's
   loading pipe = **manure** pickup (its pipe effect runs while loading, otherwise hidden), the office door =
-  opens the **Utilities** page.
+  opens the **Player Trading+** page.
 - **One farm owns it and pays the bills** (price + upkeep). Sharing the cost is up to the owner: free, or a
   **recurring cost-share invoice** that splits the cost between the farms (e.g. three ways) and bills them every month.
 - **Only one depot on the map.** A setting, default ON; when it's off, more can be placed. It's a **server
@@ -136,7 +136,7 @@ and loading stops when the paid liters are collected or the seller's stock runs 
 - No depot, or a seller/buyer not allowed to trade: a standing contract skips that period (status shows why).
 - The farm manager answers the offer, asks again and pays arrears; the "more than one depot" switch is for the server
   admin (master user; the host / singleplayer player).
-- The Utilities tab in the ESC menu is hidden until a depot stands on the map (user, 2026-10-24).
+- The Player Trading+ tab in the ESC menu is hidden until a depot stands on the map (user, 2026-10-24).
 - **Leaving** (user, 2026-10-24): a member can leave (Depot button, confirmed with Yes/No); it then can't ask to rejoin
   for 6 in-game months (counted on PERIOD_CHANGED) and gets no automatic offer. Any debt to the depot is taken from
   the farm's account when it leaves, even into the negative (user, 2026-10-24); paid invoices can still be collected
@@ -166,7 +166,7 @@ one's free capacity. Leftover that fits nowhere stays with the seller and is not
 
 ## Where players manage it
 
-- **ESC menu page "Utilities"**: new invoice, incoming, outgoing, contracts, history.
+- **ESC menu page "Player Trading+"**: new invoice, incoming, outgoing, contracts, history.
 - **The building** (placeable): walking up opens the same screen, plus the bulk and liquid fill points.
   Placed by any farm, usable by every farm.
 
