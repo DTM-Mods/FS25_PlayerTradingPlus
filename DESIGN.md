@@ -1,23 +1,28 @@
 # Player Trading+ (FS25) - design (was Utilities & Waste Management)
 
-Author PropaineX. Started 2026-10-23. Status 2026-10-24: all stages written; the depot (stage 3) is in 0.4.0.0
-(source only, not yet tried in game). File notes in CLAUDE.md.
+Author PropaineX. Started 2026-10-23. Status 2026-11-03: 0.12.1.0. Renamed to Player Trading+ in 0.12.0.0.
+Everything below is built; the newer parts (goods in the depot, bulk, pallets, discounts, the CO-OP windows) are
+not yet tried in game. File notes in CLAUDE.md.
 
-Farms trade **electricity, slurry and manure** with each other through invoices. (Propane removed by the user,
-2026-10-23.)
+Farms trade **electricity, slurry, manure, bulk goods and pallet goods** with each other through invoices and
+standing orders. (Propane removed by the user, 2026-10-23; bulk and pallets added 2026-10-28.)
 Money only moves between farms (never from the game's market). Multiplayer first; works in singleplayer with
 several farms too.
 
-Zip / mod name: `FS25_PlayerTradingPlus.zip` (FS25 mod names allow only letters, digits and `_`; the
-`&` in this folder name can't be in the zip name). Title: "Player Trading+ Pro Edition" (was "Utilities & Waste Management").
+Zip / mod name: `FS25_PlayerTradingPlus.zip` (FS25 mod names allow only letters, digits and `_`, so no `+`).
+Title: "Player Trading+ Pro Edition", brand line "PT+ CO-OP" (was "Utilities & Waste Management" / "UWM CO-OP",
+renamed 2026-11-03). Old saves: the own save file `utilitiesWasteManagement.xml` is still read; a depot placed
+under the old mod name has to be placed again.
 
 ## Goods
 
 | Good | Fill type | Delivery |
 |---|---|---|
 | Electricity | `ELECTRICCHARGE` (base game; Fed pack productions use it) | Automatic: taken from the seller's productions, put into the buyer's productions the buyer picked |
-| Slurry | `LIQUIDMANURE` | Buyer collects at the building's liquid fill point, drawn from the seller's stock |
-| Manure | `MANURE` | Buyer collects at the building's bulk fill point, drawn from the seller's stock |
+| Slurry | `LIQUIDMANURE` | Waits in the depot, buyer collects at the tank coupling |
+| Manure | `MANURE` | Waits in the depot, buyer collects at the open end of the manure pit |
+| Bulk goods | every fill type in the game's `BULK` category (map / mod ones too) | From the seller's silos and production outputs (not animal pens or production inputs); buyer loads at the depot's silo pipe |
+| Pallet goods | fill types with a game pallet | Sold by the liter. The seller's pallets are used (part pallets first); the buyer gets new 1,000 or 5,000 l pallets on the depot pad, one at a time |
 
 Digestate (`DIGESTATE`) could be added later on the slurry point if wanted (not planned).
 
@@ -42,9 +47,16 @@ Digestate (`DIGESTATE`) could be added later on the slurry point if wanted (not 
   - Electricity: paid as it is delivered (delivery is instant), only for what actually arrived.
   - Shows in the finance page as its own income/expense rows.
 
+- **Discount** (2026-10-28, changed 2026-11-02): a percentage off. The seller sets it: on a bill, on a standing sell
+  order, and on a request when approving it (seller's Approve window). Buyers can't set one; "Sell to them" into
+  a buy order has none. Both farms see it on Details, receipts and cards.
+- **Form** (2026-10-28): New -> PT+ CO-OP window (invoice a farm / request an invoice / standing buy order /
+  standing sell order) -> one form: farm, goods, pickup (always the depot), price, amount, amount in liters,
+  discount, repeat. One item per invoice (user's rule: two things = two invoices).
+
 ## Standing orders (user's idea, 2026-10-24)
 
-An order put up for **every farm** instead of billed to one farm. Two kinds, all three goods:
+An order put up for **every farm** instead of billed to one farm. Two kinds, all goods:
 - **Standing offer (selling):** "I have 1,000,000 l of slurry". Any farm buys **any amount** up to what's left (no
   minimum, no maximum, one farm may take it all) and pays at once; the poster is paid for each purchase.
 - **Standing order (buying, "wanted"):** "I want 1,000,000 l". Any farm sells **any amount it has** up to what's
@@ -72,10 +84,12 @@ its own land, so the buyer doesn't have to drive to the seller - still to build.
 
 ### The pickup building
 
-The building is **only a pickup spot**; it stores nothing. When the buyer loads at the building, every liter that
-flows into the buyer's vehicle is deducted live from the seller's own stock (silos, production points, animal
-manure heaps / slurry pits). The seller never hauls. (Replaces the earlier "depot or draw, per invoice" choice:
-there is no depot mode.)
+**Goods wait in the depot** (user's design, 2026-10-28; replaces the earlier "only a pickup spot, stores
+nothing"). Goods put up for sale leave the seller's storage and sit in the depot, still the seller's and held for
+that sale: a bill when it is sent, a request / "all of it" / contract period when paid, a standing sell order when
+posted. Buyers load from the depot; leftovers go back home when the invoice or order ends (pallets back on the pad
+for the seller). Space: 100,000,000 l per part (tank = slurry, pit = manure, silo = everything else) for all farms
+together. Electricity is not moved: it stays reserved at home.
 
 The fill point only offers a farm what it has paid for and not yet collected (the R list shows those goods only),
 and loading stops when the paid liters are collected or the seller's stock runs out.
@@ -89,7 +103,8 @@ and loading stops when the paid liters are collected or the seller's stock runs 
   month is one day (every sleep = a new day = a new month), so daily and monthly are the same. The upkeep is split
   equally between the owner and every farm that agreed to be a member. Placeable XML: dailyUpkeep 268.
 - **What each part does** (user, 2026-10-24): the tank's pump coupling = **slurry** pickup, the Farma 400's
-  loading pipe = **manure** pickup (its pipe effect runs while loading, otherwise hidden), the office door =
+  loading pipe = **manure** pickup at first, now **bulk goods** (manure moved to the pit in 0.6, bulk added in
+  0.9; the pipe effect runs while loading, otherwise hidden), the pallet pad = **pallet goods**, the office door =
   opens the **Player Trading+** page.
 - **One farm owns it and pays the bills** (price + upkeep). Sharing the cost is up to the owner: free, or a
   **recurring cost-share invoice** that splits the cost between the farms (e.g. three ways) and bills them every month.
@@ -166,9 +181,10 @@ one's free capacity. Leftover that fits nowhere stays with the seller and is not
 
 ## Where players manage it
 
-- **ESC menu page "Player Trading+"**: new invoice, incoming, outgoing, contracts, history.
-- **The building** (placeable): walking up opens the same screen, plus the bulk and liquid fill points.
-  Placed by any farm, usable by every farm.
+- **ESC menu page "Player Trading+"**: tabs INCOMING / OUTGOING / STANDING ORDERS (sub-tabs MARKET / MY ORDERS /
+  MY DEALS), summary cards, invoice cards, New, Details, Accept / Decline, Withdraw / End / Delete, "Delete finished
+  invoices" in the footer.
+- **The depot** (placeable): the office door opens the same page; slurry, manure, silo-pipe and pallet pickups.
 
 ## Multiplayer / saving
 
@@ -179,11 +195,12 @@ one's free capacity. Leftover that fits nowhere stays with the seller and is not
 
 ## Build order
 
-1. Core: invoice data, events, server checks, money + goods transfer, save/load, electricity delivery.
-2. ESC menu page.
-3. Building: model (preview first), fill points drawing from the seller's stock.
-4. Contracts (recurring), finance rows, notifications.
+All done: core invoices (0.1), seller pickup (0.2), Details (0.3), depot (0.4), standing orders + tabbed page
+(0.5), manure pit (0.6), CO-OP form (0.7), discount (0.8), CO-OP theme + goods in the depot + bulk + pallets (0.9),
+standing-orders cards (0.10), seller's discount on sell orders + Approve window (0.11), rename to Player Trading+
+(0.12).
 
 ## Open questions
 
-- Building look (to be shown as a preview before it's made).
+- Pallets from the seller's logistics building (object storage): waiting for the PROBE lines in the game log.
+- Everything since 0.9 still needs an in-game test.

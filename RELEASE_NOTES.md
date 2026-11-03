@@ -1,3 +1,29 @@
+# 0.12.1.0 — November 3, 2026
+
+Renamed to **Player Trading+** (was Utilities & Waste Management). Zip `FS25_PlayerTradingPlus.zip`, new icon
+(bolt, pallet of planks, growing corn), brand line "PT+ CO-OP", every page and text renamed. The old save file is
+still read, so invoices and orders carry over; a depot placed under the old mod name has to be placed again.
+0.12.1.0: the mod description in the mod list is up to date (bulk, pallets, standing orders, discount, goods
+waiting in the depot).
+
+# 0.11.0.0 — November 2, 2026
+
+The seller can give a discount on standing sell orders. On a request the seller sets the discount in the new
+Approve window; buyers can no longer set one.
+
+# 0.10.0.0 — October 30, 2026
+
+Standing Orders tab as cards in the CO-OP look; "Delete finished invoices" button in the footer.
+
+# 0.9.0.0 — October 28, 2026
+
+New CO-OP look for the page, the New window and the form. Goods put up for sale wait in the depot until
+collected. Bulk goods (silo pipe) and pallet goods (pallet pad) can be traded. Discount on invoices.
+
+# 0.7.0.0 / 0.8.0.0 — October 28, 2026
+
+New CO-OP window and one-screen form (one item per invoice). Discount, Amount / Amount-in-liters swap, focus fix.
+
 # 0.6.0.0 — October 26, 2026
 
 The depot now includes the approved manure pit in front of the slurry tank. Its open end faces the same

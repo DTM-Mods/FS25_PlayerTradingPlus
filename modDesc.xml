@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="utf-8" standalone="no" ?>
 <modDesc descVersion="113">
     <author>PropaineX</author>
-    <version>0.12.0.0</version>
+    <version>0.12.1.0</version>
     <title>
         <en>Player Trading+ Pro Edition</en>
     </title>
     <description>
-        <en><![CDATA[Farms trade electricity, slurry and manure with each other through invoices.
+        <en><![CDATA[Farms buy and sell with each other: electricity, slurry, manure, bulk goods (grain and more) and pallet goods, through invoices and standing orders. Money only moves between farms.
 
-Open the Player Trading+ page in the ESC menu. The farm manager can send a bill (to sell) or an order (to buy) to another farm; that farm's manager accepts or declines it. Set the amount, or take everything the seller has in stock, and set your own price per 1,000 liters (the game's price is shown as a guide). Trade once, or every day or every week until either farm ends it.
+Open the Player Trading+ page in the ESC menu (or at the depot office door). Press New to invoice a farm, request an invoice, or post a standing buy or sell order that any farm can fill in part or in full. Set your own price per 1,000 liters (the game's price is shown as a guide), a set amount or everything in stock, an optional discount, and trade once, every day or every week. Only farm managers can trade.
 
-Everything runs through the Community Depot (shop: Production, Selling points, $268,000). Without a depot on the map there are no invoices. One depot per map; the server admin can allow more on the Player Trading+ page.
+Everything runs through the Community Depot (shop: Production, Selling points, $268,000). Without a depot on the map there is no trading. One depot per map; the server admin can allow more on the Player Trading+ page.
 
-Every other farm is offered membership of the depot. Members and the owner share the depot's upkeep equally; it is taken every day. A member who can't pay builds up a debt; two months in a row ending in debt and the farm is suspended until it pays. A member can leave, but can't rejoin for 6 months; any debt is taken from its account when it leaves, even into the red. Farms that said no or are suspended can't send or accept invoices. Invoices they already paid can still be collected or ended.
+Every other farm is offered membership of the depot. Members and the owner share the depot's upkeep equally; it is taken every day. A member who can't pay builds up a debt; two months in a row ending in debt and the farm is suspended until it pays. A member can leave, but can't rejoin for 6 months; any debt is taken from its account when it leaves, even into the red. Farms that said no or are suspended can't trade. Invoices they already paid can still be collected or ended.
 
-Electricity goes straight from the seller's power-producing productions into the buyer's productions the buyer picked, and is paid for as it arrives. Slurry and manure are paid for up front and collected by anyone on the buying farm at the depot: slurry at the tank's coupling, manure at the open end of the manure pit. Only what you paid for is offered, and the liters come out of the seller's own stock. Buyers can reserve what they paid for, so the seller can't use it. Liters that are never collected are refunded when the invoice ends. The depot office door opens the Player Trading+ page.
+Goods put up for sale leave the seller's storage and wait in the depot until the buyer collects them; unsold goods go back home. Buyers pay up front and anyone on the buying farm collects at the depot: slurry at the tank's coupling, manure at the open end of the manure pit, bulk goods at the silo pipe, pallets on the pallet pad. Liters that are never collected are refunded when the invoice ends. Electricity goes straight from the seller's power-producing productions into the productions the buyer picked, and is paid for as it arrives.
 
-Multiplayer: everything runs on the server and only farm managers can trade.]]></en>
+Multiplayer: everything runs on the server.]]></en>
     </description>
     <iconFilename>icon_PlayerTradingPlus.dds</iconFilename>
     <multiplayer supported="true" />
