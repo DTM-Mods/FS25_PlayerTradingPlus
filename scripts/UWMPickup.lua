@@ -1,4 +1,4 @@
--- Utilities & Waste Management: buyers collect paid manure / slurry at the community depot (UWMDepot). The depot's
+-- Player Trading+: buyers collect paid manure / slurry at the community depot (UWMDepot). The depot's
 -- fill points are a game LoadingStation with no storages of its own (flag uwmIsDepot); for those this mod answers
 -- the three questions the load trigger asks:
 --   getIsFillAllowedToFarm  -> yes, while the farm has paid liters left to collect
@@ -30,7 +30,7 @@ end
 
 -- fill type -> liters the farm may collect at this depot station (paid for and in the sellers' stock, any seller)
 function UWMPickup.getCollectable(station, buyerFarmId)
-    local manager = UtilitiesWasteManagement.manager
+    local manager = PlayerTradingPlus.manager
     if manager == nil or not station.uwmIsDepot or buyerFarmId == nil then
         return nil
     end
@@ -76,7 +76,7 @@ function UWMPickup.addFillLevelToFillableObject(station, superFunc, fillableObje
             fillInfo, toolType, ...)
     end
 
-    local manager = UtilitiesWasteManagement.manager
+    local manager = PlayerTradingPlus.manager
     local buyerFarmId = UWMPickup.getFarmIdForObject(fillableObject)
     if manager == nil or not station.isServer or fillDelta == nil or fillDelta <= 0 or buyerFarmId == nil
         or manager:getCollectableLiters(buyerFarmId, fillTypeIndex) <= 0 then
@@ -104,7 +104,7 @@ end
 -- cleared per mission) so a hook left from an earlier savegame never runs stale code.
 function UWMPickup.installHooks()
     if LoadingStation == nil then
-        print(UtilitiesWasteManagement.TAG .. " LoadingStation not found, nothing can be collected at the depot")
+        print(PlayerTradingPlus.TAG .. " LoadingStation not found, nothing can be collected at the depot")
         return
     end
     LoadingStation.uwmPickupHandler = UWMPickup
@@ -123,10 +123,10 @@ function UWMPickup.installHooks()
                 return superFunc(station, ...)
             end)
         else
-            print(string.format("%s LoadingStation.%s not found, collecting at the depot may not work", UtilitiesWasteManagement.TAG, name))
+            print(string.format("%s LoadingStation.%s not found, collecting at the depot may not work", PlayerTradingPlus.TAG, name))
         end
     end
-    print(UtilitiesWasteManagement.TAG .. " paid manure and slurry can be collected at the depot")
+    print(PlayerTradingPlus.TAG .. " paid manure and slurry can be collected at the depot")
 end
 
 function UWMPickup.removeHooks()

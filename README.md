@@ -28,7 +28,7 @@ an in-game check. A 0.6.0.0 testing ZIP has been built; see `RELEASE_NOTES.md` f
 
 ## Files
 - `modDesc.xml` - mod description and all texts
-- `scripts/UtilitiesWasteManagement.lua` - startup, saving, join sync, notifications, finance rows
+- `scripts/PlayerTradingPlus.lua` - startup, saving, join sync, notifications, finance rows
 - `scripts/UWMInvoice.lua` - one invoice: fields, network and savegame read/write
 - `scripts/UWMManager.lua` - the trading rules (server side)
 - `scripts/UWMStock.lua` - a farm's storages, taking goods out, putting electricity in, reservations
@@ -36,14 +36,14 @@ an in-game check. A 0.6.0.0 testing ZIP has been built; see `RELEASE_NOTES.md` f
 - `scripts/UWMEvents.lua` - network events
 - `scripts/gui/UWMFrame.lua`, `gui/UWMFrame.xml` - the ESC menu page
 - `scripts/gui/UWMWizard.lua` - the new-invoice / accept steps
-- `icon_UtilitiesWasteManagement.dds` - mod icon (`.png` = its source)
+- `icon_PlayerTradingPlus.dds` - mod icon (`.png` = its source)
 - `tests/` - headless tests of the trading logic (Lua 5.1 via the Python package `lupa`), not part of the mod
 - `tools/build_zip.py` - builds the mod zip from the shipped files
 - `previews/` - icon drafts and the scripts that drew them
 - `DESIGN.md` - the design and the rules it follows
 
 ## Install
-Run `python tools/build_zip.py FS25_UtilitiesWasteManagement.zip` (or zip `modDesc.xml`, the icon `.dds`,
+Run `python tools/build_zip.py FS25_PlayerTradingPlus.zip` (or zip `modDesc.xml`, the icon `.dds`,
 `gui/` and `scripts/` with forward-slash paths, modDesc.xml at the top) and put the zip in the FS25 `mods`
 folder. Don't rename the zip.
 

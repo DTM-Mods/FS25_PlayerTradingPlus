@@ -1,4 +1,4 @@
--- Utilities & Waste Management: one standing order on the board, open to every farm (user's idea, 2026-10-24).
+-- Player Trading+: one standing order on the board, open to every farm (user's idea, 2026-10-24).
 -- OFFER  = "I have 1,000,000 l to sell": the poster's stock is held for it; any farm buys any part of what's left.
 -- WANTED = "I want 1,000,000 l": the poster's money for the whole amount is held; any farm sells any part of it.
 -- Every deal becomes a normal paid invoice between the poster and that farm; the order counts down to 0 = complete.
@@ -32,6 +32,7 @@ function UWMListing.new()
     self.isPallet = false       -- pallet goods (deals hand them out as pallets on the depot's pad)
     self.palletSize = 1000
     self.pricePer1000 = 0
+    self.discountPercent = 0    -- OFFER only: the seller's discount, passed on to every deal
     self.targets = {}           -- WANTED electricity: uniqueIds of the poster's productions, in fill order
 
     self.state = UWMListing.STATE.OPEN
@@ -57,7 +58,7 @@ function UWMListing:getIsElectricity()
 end
 
 function UWMListing:getPrice(liters)
-    return liters * self.pricePer1000 / 1000
+    return liters * self.pricePer1000 * (1 - self.discountPercent / 100) / 1000
 end
 
 -- an open electricity offer holds the poster's stock for what's left (manure / slurry sits in the depot instead)
@@ -87,6 +88,7 @@ function UWMListing:writeStream(streamId)
     streamWriteBool(streamId, self.isPallet)
     streamWriteInt32(streamId, self.palletSize)
     streamWriteFloat32(streamId, self.pricePer1000)
+    streamWriteFloat32(streamId, self.discountPercent)
     UWMInvoice.writeTargets(streamId, self.targets)
     streamWriteUInt8(streamId, self.state)
     streamWriteInt32(streamId, self.createdDay)
@@ -107,6 +109,7 @@ function UWMListing:readStream(streamId)
     self.isPallet = streamReadBool(streamId)
     self.palletSize = streamReadInt32(streamId)
     self.pricePer1000 = streamReadFloat32(streamId)
+    self.discountPercent = streamReadFloat32(streamId)
     self.targets = UWMInvoice.readTargets(streamId)
     self.state = streamReadUInt8(streamId)
     self.createdDay = streamReadInt32(streamId)
@@ -129,6 +132,7 @@ function UWMListing:saveToXMLFile(xmlFile, key)
     xmlFile:setBool(key .. "#isPallet", self.isPallet)
     xmlFile:setInt(key .. "#palletSize", self.palletSize)
     xmlFile:setFloat(key .. "#pricePer1000", self.pricePer1000)
+    xmlFile:setFloat(key .. "#discountPercent", self.discountPercent)
     xmlFile:setInt(key .. "#state", self.state)
     xmlFile:setInt(key .. "#createdDay", self.createdDay)
     xmlFile:setInt(key .. "#finishedDay", self.finishedDay)
@@ -157,6 +161,7 @@ function UWMListing:loadFromXMLFile(xmlFile, key)
     self.isPallet = xmlFile:getBool(key .. "#isPallet", false)
     self.palletSize = xmlFile:getInt(key .. "#palletSize", 1000)
     self.pricePer1000 = xmlFile:getFloat(key .. "#pricePer1000", 0)
+    self.discountPercent = xmlFile:getFloat(key .. "#discountPercent", 0)
     self.state = xmlFile:getInt(key .. "#state", UWMListing.STATE.OPEN)
     self.createdDay = xmlFile:getInt(key .. "#createdDay", 0)
     self.finishedDay = xmlFile:getInt(key .. "#finishedDay", 0)

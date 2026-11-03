@@ -1,4 +1,4 @@
--- Utilities & Waste Management: the UWM CO-OP dialog, opened by "New" on the Utilities page.
+-- Player Trading+: the UWM CO-OP dialog, opened by "New" on the Player Trading+ page.
 -- Invoice a farm / request an invoice / standing buy order / standing sell order -> the form (UWMOrderDialog).
 -- Author: PropaineX
 
@@ -13,7 +13,7 @@ end
 
 function UWMCoopDialog.register()
     local dialog = UWMCoopDialog.new()
-    g_gui:loadGui(UtilitiesWasteManagement.modDirectory .. "gui/UWMCoopDialog.xml", UWMCoopDialog.NAME, dialog)
+    g_gui:loadGui(PlayerTradingPlus.modDirectory .. "gui/UWMCoopDialog.xml", UWMCoopDialog.NAME, dialog)
     UWMCoopDialog.instance = dialog
 end
 

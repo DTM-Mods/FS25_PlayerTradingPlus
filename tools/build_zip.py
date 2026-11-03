@@ -1,4 +1,4 @@
-"""Builds FS25_UtilitiesWasteManagement.zip from the shipped files only (forward-slash paths, modDesc at the root)
+"""Builds FS25_PlayerTradingPlus.zip from the shipped files only (forward-slash paths, modDesc at the root)
 and checks every entry against the source by SHA-256.
 Usage: python -I tools\\build_zip.py <out.zip>"""
 import hashlib
@@ -9,7 +9,7 @@ import zipfile
 project = pathlib.Path(__file__).resolve().parent.parent
 out = pathlib.Path(sys.argv[1])
 
-files = ["modDesc.xml", "icon_UtilitiesWasteManagement.dds"]
+files = ["modDesc.xml", "icon_PlayerTradingPlus.dds"]
 files += sorted(p.relative_to(project).as_posix() for p in (project / "gui").glob("*.xml"))
 files += sorted(p.relative_to(project).as_posix() for p in (project / "gui").glob("*.dds"))
 files += sorted(p.relative_to(project).as_posix() for p in (project / "scripts").rglob("*.lua"))

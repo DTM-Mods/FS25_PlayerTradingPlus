@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="utf-8" standalone="no" ?>
+<!-- UWM CO-OP: the seller approves a request for an invoice and may give a discount.
+     Look = mock-up previews/seller_discount_v1_request.png, right side (user OK'd 2026-11-02). Same theme as the form
+     (UWMOrderDialog.xml); own profiles so it doesn't lean on the form's. Sizes for 1920 x 1080. -->
+<GUI onOpen="onOpen" onClose="onClose" onCreate="onCreate">
+    <GuiElement profile="newLayer"/>
+    <Bitmap profile="dialogFullscreenBg"/>
+
+    <GuiElement profile="uwmApproveDialogBg" id="dialogElement">
+        <ThreePartBitmap profile="fs25_dialogBgMiddle"/>
+        <ThreePartBitmap profile="fs25_dialogBgTop"/>
+        <ThreePartBitmap profile="fs25_dialogBgBottom"/>
+
+        <GuiElement profile="fs25_dialogContentContainer">
+            <GuiElement profile="uwmApproveContent">
+                <!-- header -->
+                <Bitmap profile="uwmApproveHeadTile" name="uwmImg_tile"/>
+                <Bitmap profile="uwmApproveHeadIcon" id="headIcon"/>
+                <Text profile="uwmApproveBrand" text="$l10n_uwm_coop_title"/>
+                <Text profile="uwmApproveTitle" text="$l10n_uwm_approve_title"/>
+                <Text profile="uwmApproveFrom" id="fromText"/>
+                <Bitmap profile="uwmApproveRule" position="0px -72px" name="uwmImg_solid"/>
+
+                <!-- what they asked for -->
+                <Bitmap profile="uwmApproveGoodsEdge" name="uwmImg_solid"/>
+                <Bitmap profile="uwmApproveGoodsBg" name="uwmImg_solid"/>
+                <Bitmap profile="uwmApproveGoodsTile" name="uwmImg_tile"/>
+                <Bitmap profile="uwmApproveGoodsIcon" id="goodsIcon"/>
+                <Text profile="uwmApproveGoodsName" id="goodsText"/>
+                <Text profile="uwmApproveGoodsSub" id="pickupText"/>
+                <Text profile="uwmApproveGoodsPrice" id="priceText"/>
+
+                <!-- the discount -->
+                <Text profile="uwmApproveInputLabel" text="$l10n_uwm_form_discount"/>
+                <TextInput profile="uwmApproveInput" id="discountInput" onTextChanged="onInputChanged" enterWhenClickOutside="false">
+                    <ThreePartBitmap profile="uwmApproveInputOutline"/>
+                    <Bitmap profile="uwmApproveInputPen" name="uwmImg_pencil"/>
+                </TextInput>
+                <Text profile="uwmApproveHint" text="$l10n_uwm_approve_hint"/>
+
+                <!-- totals -->
+                <Bitmap profile="uwmApproveTotalEdge" name="uwmImg_solid"/>
+                <Bitmap profile="uwmApproveTotalBg" name="uwmImg_solid"/>
+                <Text profile="uwmApproveLineKey" position="24px -322px" id="subtotalKey"/>
+                <Text profile="uwmApproveLineValue" position="-24px -322px" id="subtotalValue"/>
+                <Text profile="uwmApproveLineKey" position="24px -356px" id="discountKey"/>
+                <Text profile="uwmApproveLineValue" position="-24px -356px" id="discountValue"/>
+                <Bitmap profile="uwmApproveTotalRule" name="uwmImg_solid"/>
+                <Text profile="uwmApproveTotalLabel" id="totalLabel"/>
+                <Text profile="uwmApproveTotalValue" id="totalValue"/>
+                <Text profile="uwmApproveNote" id="noteText"/>
+            </GuiElement>
+        </GuiElement>
+
+        <BoxLayout profile="fs25_dialogButtonBox" size="840px 60px">
+            <Button profile="buttonOK" text="$l10n_uwm_approve_button" onClick="onClickApprove"/>
+            <Bitmap profile="fs25_dialogButtonBoxSeparator"/>
+            <Button profile="buttonExtra1" text="$l10n_uwm_button_decline" onClick="onClickDecline"/>
+            <Bitmap profile="fs25_dialogButtonBoxSeparator"/>
+            <Button profile="buttonBack" text="$l10n_uwm_button_back" onClick="onClickBack"/>
+        </BoxLayout>
+    </GuiElement>
+
+    <GUIProfiles>
+        <Profile name="uwmApproveDialogBg" extends="fs25_dialogBg">
+            <size value="900px 600px"/>
+        </Profile>
+        <Profile name="uwmApproveContent" extends="emptyPanel" with="anchorTopCenter">
+            <size value="840px 500px"/>
+        </Profile>
+
+        <Profile name="uwmApproveShape" extends="baseReference" with="anchorTopLeft">
+            <imageColor value="0.110 0.114 0.106 1"/>
+        </Profile>
+        <Profile name="uwmApproveEdge" extends="uwmApproveShape">
+            <imageColor value="0.180 0.188 0.169 1"/>
+        </Profile>
+        <Profile name="uwmApproveText" extends="baseReference" with="anchorTopLeft">
+            <textSize value="15px"/>
+            <textColor value="$preset_colorWhite"/>
+            <textAlignment value="left"/>
+            <textVerticalAlignment value="middle"/>
+        </Profile>
+        <Profile name="uwmApproveCaps" extends="uwmApproveText">
+            <textSize value="12px"/>
+            <textBold value="true"/>
+            <textUpperCase value="true"/>
+            <textColor value="0.431 0.439 0.412 1"/>
+        </Profile>
+
+        <!-- header -->
+        <Profile name="uwmApproveHeadTile" extends="uwmApproveShape">
+            <position value="0px -4px"/>
+            <size value="58px 58px"/>
+            <imageColor value="0.525 0.694 0.067 1"/>
+        </Profile>
+        <Profile name="uwmApproveHeadIcon" extends="uwmApproveShape">
+            <position value="7px -11px"/>
+            <size value="44px 44px"/>
+            <imageColor value="1 1 1 1"/>
+        </Profile>
+        <Profile name="uwmApproveBrand" extends="uwmApproveCaps">
+            <position value="74px -6px"/>
+            <size value="400px 20px"/>
+            <textSize value="14px"/>
+            <textColor value="0.651 0.784 0.235 1"/>
+        </Profile>
+        <Profile name="uwmApproveTitle" extends="uwmApproveText">
+            <position value="74px -26px"/>
+            <size value="460px 34px"/>
+            <textSize value="26px"/>
+            <textBold value="true"/>
+        </Profile>
+        <Profile name="uwmApproveFrom" extends="uwmApproveText">
+            <position value="540px -16px"/>
+            <size value="300px 30px"/>
+            <textColor value="0.667 0.667 0.647 1"/>
+            <textAlignment value="right"/>
+            <textLayoutMode value="scrolling"/>
+        </Profile>
+        <Profile name="uwmApproveRule" extends="uwmApproveShape">
+            <size value="840px 1dp"/>
+            <imageColor value="0.243 0.251 0.227 1"/>
+        </Profile>
+
+        <!-- goods card -->
+        <Profile name="uwmApproveGoodsEdge" extends="uwmApproveEdge">
+            <position value="0px -88px"/>
+            <size value="840px 72px"/>
+        </Profile>
+        <Profile name="uwmApproveGoodsBg" extends="uwmApproveShape">
+            <position value="1px -89px"/>
+            <size value="838px 70px"/>
+        </Profile>
+        <Profile name="uwmApproveGoodsTile" extends="uwmApproveShape">
+            <position value="14px -100px"/>
+            <size value="48px 48px"/>
+            <imageColor value="0.157 0.173 0.133 1"/>
+        </Profile>
+        <Profile name="uwmApproveGoodsIcon" extends="uwmApproveShape">
+            <position value="20px -106px"/>
+            <size value="36px 36px"/>
+            <imageColor value="0.651 0.784 0.235 1"/>
+        </Profile>
+        <Profile name="uwmApproveGoodsName" extends="uwmApproveText">
+            <position value="78px -96px"/>
+            <size value="560px 30px"/>
+            <textSize value="19px"/>
+            <textBold value="true"/>
+            <textLayoutMode value="scrolling"/>
+        </Profile>
+        <Profile name="uwmApproveGoodsSub" extends="uwmApproveText">
+            <position value="78px -126px"/>
+            <size value="560px 24px"/>
+            <textSize value="14px"/>
+            <textColor value="0.667 0.667 0.647 1"/>
+            <textLayoutMode value="scrolling"/>
+        </Profile>
+        <Profile name="uwmApproveGoodsPrice" extends="uwmApproveText">
+            <position value="640px -88px"/>
+            <size value="180px 72px"/>
+            <textSize value="18px"/>
+            <textBold value="true"/>
+            <textColor value="0.651 0.784 0.235 1"/>
+            <textAlignment value="right"/>
+        </Profile>
+
+        <!-- discount input -->
+        <Profile name="uwmApproveInputLabel" extends="uwmApproveCaps">
+            <position value="0px -180px"/>
+            <size value="300px 18px"/>
+        </Profile>
+        <Profile name="uwmApproveInput" extends="fs25_textInput" with="anchorTopLeft">
+            <position value="0px -202px"/>
+            <size value="300px 36px"/>
+            <handleFocus value="true"/>
+            <applyProfanityFilter value="false"/>
+            <maxCharacters value="6"/>
+            <imageSliceId value="noSlice"/>
+            <imageColor value="$preset_colorTransparent"/>
+            <imageFocusedColor value="$preset_colorTransparent"/>
+            <imageHighlightedColor value="$preset_colorTransparent"/>
+            <imageSelectedColor value="$preset_colorTransparent"/>
+            <imageDisabledColor value="$preset_colorTransparent"/>
+            <textAlignment value="center"/>
+            <textOffset value="0px 2px"/>
+            <cursorSize value="1px 14px"/>
+            <cursorOffset value="1px -2px"/>
+        </Profile>
+        <Profile name="uwmApproveInputOutline" extends="baseReference">
+            <imageSliceId value="gui.3dShop_button_outline_middle"/>
+            <imageColor value="0.525 0.694 0.067 1"/>
+            <imageFocusedColor value="$preset_fs25_colorMainHighlight"/>
+            <imageHighlightedColor value="$preset_fs25_colorMainHighlight"/>
+            <startImageSize value="6px 0"/>
+            <startImageSliceId value="gui.3dShop_button_outline_left"/>
+            <startImageColor value="0.525 0.694 0.067 1"/>
+            <startImageFocusedColor value="$preset_fs25_colorMainHighlight"/>
+            <startImageHighlightedColor value="$preset_fs25_colorMainHighlight"/>
+            <endImageSize value="6px 0"/>
+            <endImageSliceId value="gui.3dShop_button_outline_right"/>
+            <endImageColor value="0.525 0.694 0.067 1"/>
+            <endImageFocusedColor value="$preset_fs25_colorMainHighlight"/>
+            <endImageHighlightedColor value="$preset_fs25_colorMainHighlight"/>
+        </Profile>
+        <Profile name="uwmApproveInputPen" extends="baseReference" with="anchorMiddleRight">
+            <position value="-8px 0px"/>
+            <size value="16px 16px"/>
+            <imageColor value="0.667 0.667 0.647 1"/>
+            <imageFocusedColor value="$preset_fs25_colorMainHighlight"/>
+            <imageHighlightedColor value="$preset_fs25_colorMainHighlight"/>
+        </Profile>
+        <Profile name="uwmApproveHint" extends="uwmApproveText">
+            <position value="0px -244px"/>
+            <size value="600px 20px"/>
+            <textSize value="13px"/>
+            <textColor value="0.667 0.667 0.647 1"/>
+        </Profile>
+
+        <!-- totals -->
+        <Profile name="uwmApproveTotalEdge" extends="uwmApproveEdge">
+            <position value="0px -300px"/>
+            <size value="840px 160px"/>
+        </Profile>
+        <Profile name="uwmApproveTotalBg" extends="uwmApproveShape">
+            <position value="1px -301px"/>
+            <size value="838px 158px"/>
+            <imageColor value="0.086 0.090 0.082 1"/>
+        </Profile>
+        <Profile name="uwmApproveLineKey" extends="uwmApproveText">
+            <size value="500px 28px"/>
+            <textColor value="0.667 0.667 0.647 1"/>
+        </Profile>
+        <Profile name="uwmApproveLineValue" extends="uwmApproveText" with="anchorTopRight">
+            <size value="300px 28px"/>
+            <textBold value="true"/>
+            <textAlignment value="right"/>
+        </Profile>
+        <Profile name="uwmApproveTotalRule" extends="uwmApproveShape">
+            <position value="24px -390px"/>
+            <size value="792px 1dp"/>
+            <imageColor value="0.243 0.251 0.227 1"/>
+        </Profile>
+        <Profile name="uwmApproveTotalLabel" extends="uwmApproveCaps">
+            <position value="24px -400px"/>
+            <size value="400px 50px"/>
+            <textSize value="13px"/>
+        </Profile>
+        <Profile name="uwmApproveTotalValue" extends="uwmApproveText">
+            <position value="420px -396px"/>
+            <size value="396px 58px"/>
+            <textSize value="38px"/>
+            <textBold value="true"/>
+            <textColor value="0.651 0.784 0.235 1"/>
+            <textAlignment value="right"/>
+        </Profile>
+        <Profile name="uwmApproveNote" extends="uwmApproveText">
+            <position value="0px -470px"/>
+            <size value="840px 22px"/>
+            <textSize value="13px"/>
+            <textColor value="0.667 0.667 0.647 1"/>
+        </Profile>
+    </GUIProfiles>
+</GUI>

@@ -15,7 +15,7 @@ texts = lua.table_from({e.get("name"): e.findtext("en") for e in ET.parse(mod / 
 lua.globals().UWM_TEXTS = texts
 
 run(tests / "stubs.lua")
-for name in ["UWMInvoice", "UWMListing", "UWMStock", "UWMPallets", "UWMManager", "UWMEvents", "UWMPickup", "UWMDepot", "UtilitiesWasteManagement", "gui/UWMFrame", "gui/UWMGui", "gui/UWMWizard", "gui/UWMOrderDialog", "gui/UWMCoopDialog"]:
+for name in ["UWMInvoice", "UWMListing", "UWMStock", "UWMPallets", "UWMManager", "UWMEvents", "UWMPickup", "UWMDepot", "PlayerTradingPlus", "gui/UWMFrame", "gui/UWMGui", "gui/UWMWizard", "gui/UWMOrderDialog", "gui/UWMCoopDialog", "gui/UWMApproveDialog"]:
     run(mod / "scripts" / (name + ".lua"))
 failed = run(tests / "scenarios.lua")
 failed = failed + run(tests / "form_scenarios.lua")

@@ -8,7 +8,7 @@ Farms trade **electricity, slurry and manure** with each other through invoices.
 Money only moves between farms (never from the game's market). Multiplayer first; works in singleplayer with
 several farms too.
 
-Zip / mod name: `FS25_UtilitiesWasteManagement.zip` (FS25 mod names allow only letters, digits and `_`; the
+Zip / mod name: `FS25_PlayerTradingPlus.zip` (FS25 mod names allow only letters, digits and `_`; the
 `&` in this folder name can't be in the zip name). Title: "Utilities & Waste Management".
 
 ## Goods
@@ -174,7 +174,7 @@ one's free capacity. Leftover that fits nowhere stays with the seller and is not
 
 - The server owns all invoices. Clients send requests as events (create, accept, decline, cancel); the server checks
   rights, stock and money, moves goods/money, and sends the new state to everyone.
-- Invoices, contracts and liters still to collect are saved in the savegame (`utilitiesWasteManagement.xml`) and sent to
+- Invoices, contracts and liters still to collect are saved in the savegame (`playerTradingPlus.xml` (old `utilitiesWasteManagement.xml` still read)) and sent to
   players who join.
 
 ## Build order

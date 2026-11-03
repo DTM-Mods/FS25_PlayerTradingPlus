@@ -1,4 +1,4 @@
--- Utilities & Waste Management: pallet goods (user, 2026-10-28). Sold by the liter like everything else.
+-- Player Trading+: pallet goods (user, 2026-10-28). Sold by the liter like everything else.
 -- Selling takes the liters off the seller's own pallets on the map (empty pallets are removed); the buyer gets new
 -- pallets on the depot's pallet pad, filled up to the chosen pallet size (1,000 or 5,000 l, never more than the
 -- game's pallet for that good holds). Unsold pallet goods going home also come out on the pad, for the seller.
@@ -15,7 +15,7 @@ UWMPallets.busy = false
 
 -- goods the game sells on pallets (a pallet file), apart from our own three goods
 function UWMPallets.getIsPalletGood(fillTypeIndex)
-    if fillTypeIndex == nil or fillTypeIndex == FillType.UNKNOWN or UtilitiesWasteManagement.getGood(fillTypeIndex) ~= nil then
+    if fillTypeIndex == nil or fillTypeIndex == FillType.UNKNOWN or PlayerTradingPlus.getGood(fillTypeIndex) ~= nil then
         return false
     end
     local fillType = g_fillTypeManager:getFillTypeByIndex(fillTypeIndex)
@@ -73,7 +73,7 @@ function UWMPallets.getGoods(farmId)
             if liters > 0 and UWMPallets.getIsPalletGood(fillTypeIndex) then
                 local entry = byType[fillTypeIndex]
                 if entry == nil then
-                    entry = {fillTypeIndex = fillTypeIndex, name = UtilitiesWasteManagement.getGoodName(fillTypeIndex), liters = 0, count = 0}
+                    entry = {fillTypeIndex = fillTypeIndex, name = PlayerTradingPlus.getGoodName(fillTypeIndex), liters = 0, count = 0}
                     byType[fillTypeIndex] = entry
                 end
                 entry.liters = entry.liters + liters
@@ -96,7 +96,7 @@ function UWMPallets.getAllGoods()
     local goods = {}
     for _, fillType in ipairs(g_fillTypeManager:getFillTypes()) do
         if UWMPallets.getIsPalletGood(fillType.index) then
-            table.insert(goods, {fillTypeIndex = fillType.index, name = UtilitiesWasteManagement.getGoodName(fillType.index)})
+            table.insert(goods, {fillTypeIndex = fillType.index, name = PlayerTradingPlus.getGoodName(fillType.index)})
         end
     end
     table.sort(goods, function(a, b)
@@ -201,7 +201,7 @@ function UWMPallets.onPalletSpawned(entry, pallet, result)
     if pallet == nil then
         -- pad full, pallet limit or no pallet for this good: wait and try again (no pallet file: drop it)
         if result == PalletSpawner.NO_PALLET_FOR_FILLTYPE then
-            Logging.warning("%s no pallet for fill type %s, %.0f l not handed out", UtilitiesWasteManagement.TAG,
+            Logging.warning("%s no pallet for fill type %s, %.0f l not handed out", PlayerTradingPlus.TAG,
                 tostring(g_fillTypeManager:getFillTypeNameByIndex(entry.fillTypeIndex)), entry.liters)
             UWMPallets.cancelEntry(entry)
         else
@@ -216,7 +216,7 @@ function UWMPallets.onPalletSpawned(entry, pallet, result)
     local want = math.min(entry.liters, entry.size)
     local delta = pallet:addFillUnitFillLevel(entry.farmId, fillUnitIndex, want, entry.fillTypeIndex, ToolType.UNDEFINED) or 0
     if delta <= 0 then
-        Logging.warning("%s the pallet took no %s, %.0f l not handed out", UtilitiesWasteManagement.TAG,
+        Logging.warning("%s the pallet took no %s, %.0f l not handed out", PlayerTradingPlus.TAG,
             tostring(g_fillTypeManager:getFillTypeNameByIndex(entry.fillTypeIndex)), entry.liters)
         pallet:delete()
         UWMPallets.cancelEntry(entry)
@@ -254,20 +254,20 @@ function UWMPallets.probeObjectStorages(farmId)
         local spec = placeable.spec_objectStorage
         if spec ~= nil and spec.storedObjects ~= nil and #spec.storedObjects > 0 then
             local object = spec.storedObjects[1]
-            print(string.format("%s PROBE object storage '%s' farm %s: %d stored objects", UtilitiesWasteManagement.TAG,
+            print(string.format("%s PROBE object storage '%s' farm %s: %d stored objects", PlayerTradingPlus.TAG,
                 tostring(placeable:getName()), tostring(placeable:getOwnerFarmId()), #spec.storedObjects))
             for key, value in pairs(object) do
-                print(string.format("%s PROBE   %s = %s (%s)", UtilitiesWasteManagement.TAG, tostring(key), tostring(value), type(value)))
+                print(string.format("%s PROBE   %s = %s (%s)", PlayerTradingPlus.TAG, tostring(key), tostring(value), type(value)))
                 if type(value) == "table" then
                     for subKey, subValue in pairs(value) do
-                        print(string.format("%s PROBE     %s.%s = %s", UtilitiesWasteManagement.TAG, tostring(key), tostring(subKey), tostring(subValue)))
+                        print(string.format("%s PROBE     %s.%s = %s", PlayerTradingPlus.TAG, tostring(key), tostring(subKey), tostring(subValue)))
                     end
                 end
             end
             local mt = getmetatable(object)
             if mt ~= nil and type(mt.__index) == "table" then
                 for name in pairs(mt.__index) do
-                    print(string.format("%s PROBE   method %s", UtilitiesWasteManagement.TAG, tostring(name)))
+                    print(string.format("%s PROBE   method %s", PlayerTradingPlus.TAG, tostring(name)))
                 end
             end
             return

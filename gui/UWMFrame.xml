@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" standalone="no" ?>
-<!-- Utilities page (0.5): tabs INCOMING / OUTGOING / STANDING ORDERS, the last with sub-tabs MARKET / MY ORDERS /
+<!-- Player Trading+ page (0.5): tabs INCOMING / OUTGOING / STANDING ORDERS, the last with sub-tabs MARKET / MY ORDERS /
      MY DEALS (user's layout, mock-up previews/menu_v1_*.png). Which parts show is switched in UWMFrame.lua.
      Geometry (2026-10-24): the tab container's content is inset 63px, so tables start at x -63px and run 1580px
      wide; column headings 14px into their box, line under them at -48, list from -50, bottom line at -723. Sub-tabs at
@@ -87,8 +87,9 @@
             </SmoothList>
             <Text profile="uwm_emptyText" position="540px -350px" id="invoiceEmpty"/>
 
-            <!-- STANDING ORDERS: sub-tabs -->
-            <BoxLayout profile="fs25_subCategorySelectorTabbedBox" id="boardTabBox" position="-63px -45px" size="1580px 57px">
+            <!-- STANDING ORDERS (UWM CO-OP theme, mock-up previews/menu_v5_standing.png, user OK'd 2026-10-30): the summary
+                 cards stay on top, sub-tabs under them, every standing order / deal is a card like the invoices -->
+            <BoxLayout profile="fs25_subCategorySelectorTabbedBox" id="boardTabBox" position="-63px -96px" size="1580px 57px">
                 <Button profile="fs25_subCategorySelectorTabbedTab" id="boardTabs[1]" text="$l10n_uwm_tab_market" onClick="onClickTabMarket">
                     <ThreePartBitmap profile="fs25_subCategorySelectorTabbedTabBg" name="background"/>
                 </Button>
@@ -99,81 +100,56 @@
                     <ThreePartBitmap profile="fs25_subCategorySelectorTabbedTabBg" name="background"/>
                 </Button>
             </BoxLayout>
-            <ThreePartBitmap profile="fs25_lineSeparatorTopHighlighted" position="-63px -102px" size="100% 2dp" id="boardTabLine"/>
-            <MultiTextOption profile="fs25_subCategorySelectorTabbed" id="boardPaging" position="-63px -55px" onClick="onClickBoardPaging"/>
+            <ThreePartBitmap profile="fs25_lineSeparatorTopHighlighted" position="-63px -153px" size="100% 2dp" id="boardTabLine"/>
+            <MultiTextOption profile="fs25_subCategorySelectorTabbed" id="boardPaging" position="-63px -106px" onClick="onClickBoardPaging"/>
 
             <!-- MARKET: other farms' open standing orders -->
-            <GuiElement profile="fs25_statisticsHeaderBox" position="-63px -112px" id="marketHeader">
-                <Text profile="uwm_headerCell" position="20px -14px"   size="290px 32px" text="$l10n_uwm_column_farm"/>
-                <Text profile="uwm_headerCell" position="320px -14px"  size="150px 32px" text="$l10n_uwm_column_type"/>
-                <Text profile="uwm_headerCell" position="480px -14px"  size="180px 32px" text="$l10n_uwm_column_product"/>
-                <Text profile="uwm_headerCell" position="670px -14px"  size="210px 32px" text="$l10n_uwm_column_left"/>
-                <Text profile="uwm_headerCell" position="890px -14px"  size="210px 32px" text="$l10n_uwm_column_of"/>
-                <Text profile="uwm_headerCell" position="1110px -14px" size="280px 32px" text="$l10n_uwm_column_price"/>
-                <Text profile="uwm_headerCell" position="1400px -14px" size="150px 32px" text="$l10n_uwm_column_held"/>
-            </GuiElement>
-            <ThreePartBitmap profile="fs25_lineSeparatorTop" position="-63px -160px" size="100% 1dp" id="marketHeaderLine"/>
-            <SmoothList profile="uwm_list" id="marketList" position="-63px -162px" size="100% 318px">
-                <ListItem profile="uwm_listItem">
-                    <ThreePartBitmap profile="uwm_listItemBg" name="alternating"/>
-                    <Text profile="uwm_rowCell" position="20px 0px"   size="290px 32px" name="c1"/>
-                    <Text profile="uwm_rowCellBold" position="320px 0px"  size="150px 32px" name="c2"/>
-                    <Text profile="uwm_rowCell" position="480px 0px"  size="180px 32px" name="c3"/>
-                    <Text profile="uwm_rowCellBold" position="670px 0px"  size="210px 32px" name="c4"/>
-                    <Text profile="uwm_rowCell" position="890px 0px"  size="210px 32px" name="c5"/>
-                    <Text profile="uwm_rowCellBold" position="1110px 0px" size="280px 32px" name="c6"/>
-                    <Text profile="uwm_rowCell" position="1400px 0px" size="150px 32px" name="c7"/>
+            <Text profile="uwm_sectionLabel" position="-63px -162px" text="$l10n_uwm_section_market" id="marketHeader"/>
+            <SmoothList profile="uwm_list" id="marketList" position="-63px -194px" size="100% 306px" listItemSpacing="12px">
+                <ListItem profile="uwm_cardItem">
+                    <Bitmap profile="uwm_cardEdge" name="uwmImg_solid"/>
+                    <Bitmap profile="uwm_cardBg" name="uwmImg_solid"/>
+                    <Bitmap profile="uwm_cardTile" name="uwmImg_tile"/>
+                    <Bitmap profile="uwm_cardIcon" name="icon"/>
+                    <Text profile="uwm_cardTitle" name="title"/>
+                    <Text profile="uwm_cardSub" name="sub"/>
+                    <Text profile="uwm_cardStatus" name="status"/>
+                    <Text profile="uwm_cardAmount" name="amount"/>
+                    <Bitmap profile="uwm_cardArrow" name="uwmImg_arrow"/>
                 </ListItem>
             </SmoothList>
-            <Text profile="uwm_emptyText" position="540px -300px" id="marketEmpty"/>
+            <Text profile="uwm_emptyText" position="540px -320px" id="marketEmpty"/>
 
             <!-- MARKET, lower panel: your open deals -->
-            <GuiElement profile="fs25_statisticsHeaderBox" position="-63px -494px" size="1580px 102px" id="dealsHeader">
-                <ThreePartBitmap profile="fs25_lineSeparatorTopHighlighted" position="0px 0px" size="100% 2dp"/>
-                <Text profile="uwm_sectionTitle" position="20px -10px" size="1200px 32px" text="$l10n_uwm_dealsTitle"/>
-                <ThreePartBitmap profile="fs25_lineSeparatorTop" position="0px -52px" size="100% 1dp"/>
-                <Text profile="uwm_headerCell" position="20px -66px"   size="420px 32px" text="$l10n_uwm_column_farm"/>
-                <Text profile="uwm_headerCell" position="450px -66px"  size="250px 32px" text="$l10n_uwm_column_product"/>
-                <Text profile="uwm_headerCell" position="710px -66px"  size="280px 32px" text="$l10n_uwm_column_volume"/>
-                <Text profile="uwm_headerCell" position="1000px -66px" size="250px 32px" text="$l10n_uwm_column_amount"/>
-                <Text profile="uwm_headerCell" position="1260px -66px" size="290px 32px" text="$l10n_uwm_column_toCollect"/>
-                <ThreePartBitmap profile="fs25_lineSeparatorTop" position="0px -100px" size="100% 1dp"/>
-            </GuiElement>
-            <SmoothList profile="uwm_list" id="dealsList" position="-63px -596px" size="100% 126px">
-                <ListItem profile="uwm_listItem">
-                    <ThreePartBitmap profile="uwm_listItemBg" name="alternating"/>
-                    <Text profile="uwm_rowCell" position="20px 0px"   size="420px 32px" name="c1"/>
-                    <Text profile="uwm_rowCell" position="450px 0px"  size="250px 32px" name="c2"/>
-                    <Text profile="uwm_rowCellBold" position="710px 0px"  size="280px 32px" name="c3"/>
-                    <Text profile="uwm_rowCellBold" position="1000px 0px" size="250px 32px" name="c4"/>
-                    <Text profile="uwm_rowCell" position="1260px 0px" size="290px 32px" name="c5"/>
+            <ThreePartBitmap profile="fs25_lineSeparatorTop" position="-63px -508px" size="100% 1dp" id="dealsLine"/>
+            <Text profile="uwm_sectionLabel" position="-63px -514px" text="$l10n_uwm_dealsTitle" id="dealsHeader"/>
+            <SmoothList profile="uwm_list" id="dealsList" position="-63px -546px" size="100% 170px" listItemSpacing="12px">
+                <ListItem profile="uwm_cardItem">
+                    <Bitmap profile="uwm_cardEdge" name="uwmImg_solid"/>
+                    <Bitmap profile="uwm_cardBg" name="uwmImg_solid"/>
+                    <Bitmap profile="uwm_cardTile" name="uwmImg_tile"/>
+                    <Bitmap profile="uwm_cardIcon" name="icon"/>
+                    <Text profile="uwm_cardTitle" name="title"/>
+                    <Text profile="uwm_cardSub" name="sub"/>
+                    <Text profile="uwm_cardStatus" name="status"/>
+                    <Text profile="uwm_cardAmount" name="amount"/>
+                    <Bitmap profile="uwm_cardArrow" name="uwmImg_arrow"/>
                 </ListItem>
             </SmoothList>
-            <Text profile="uwm_emptyText" position="540px -640px" id="dealsEmpty"/>
+            <Text profile="uwm_emptyText" position="540px -600px" id="dealsEmpty"/>
 
-            <!-- MY ORDERS / MY DEALS: one list, the column titles change with the sub-tab -->
-            <GuiElement profile="fs25_statisticsHeaderBox" position="-63px -112px" id="boardHeader">
-                <Text profile="uwm_headerCell" position="20px -14px"   size="140px 32px" id="boardColumns[1]"/>
-                <Text profile="uwm_headerCell" position="170px -14px"  size="150px 32px" id="boardColumns[2]"/>
-                <Text profile="uwm_headerCell" position="330px -14px"  size="240px 32px" id="boardColumns[3]"/>
-                <Text profile="uwm_headerCell" position="580px -14px"  size="190px 32px" id="boardColumns[4]"/>
-                <Text profile="uwm_headerCell" position="780px -14px"  size="190px 32px" id="boardColumns[5]"/>
-                <Text profile="uwm_headerCell" position="980px -14px"  size="170px 32px" id="boardColumns[6]"/>
-                <Text profile="uwm_headerCell" position="1160px -14px" size="190px 32px" id="boardColumns[7]"/>
-                <Text profile="uwm_headerCell" position="1360px -14px" size="190px 32px" id="boardColumns[8]"/>
-            </GuiElement>
-            <ThreePartBitmap profile="fs25_lineSeparatorTop" position="-63px -160px" size="100% 1dp" id="boardHeaderLine"/>
-            <SmoothList profile="uwm_list" id="boardList" position="-63px -162px" size="100% 560px">
-                <ListItem profile="uwm_listItem">
-                    <ThreePartBitmap profile="uwm_listItemBg" name="alternating"/>
-                    <Text profile="uwm_rowCell" position="20px 0px"   size="140px 32px" name="c1"/>
-                    <Text profile="uwm_rowCell" position="170px 0px"  size="150px 32px" name="c2"/>
-                    <Text profile="uwm_rowCell" position="330px 0px"  size="240px 32px" name="c3"/>
-                    <Text profile="uwm_rowCell" position="580px 0px"  size="190px 32px" name="c4"/>
-                    <Text profile="uwm_rowCell" position="780px 0px"  size="190px 32px" name="c5"/>
-                    <Text profile="uwm_rowCell" position="980px 0px"  size="170px 32px" name="c6"/>
-                    <Text profile="uwm_rowCellBold" position="1160px 0px" size="190px 32px" name="c7"/>
-                    <Text profile="uwm_rowCellBold" position="1360px 0px" size="190px 32px" name="c8"/>
+            <!-- MY ORDERS / MY DEALS: one list of cards -->
+            <SmoothList profile="uwm_list" id="boardList" position="-63px -166px" size="100% 550px" listItemSpacing="12px">
+                <ListItem profile="uwm_cardItem">
+                    <Bitmap profile="uwm_cardEdge" name="uwmImg_solid"/>
+                    <Bitmap profile="uwm_cardBg" name="uwmImg_solid"/>
+                    <Bitmap profile="uwm_cardTile" name="uwmImg_tile"/>
+                    <Bitmap profile="uwm_cardIcon" name="icon"/>
+                    <Text profile="uwm_cardTitle" name="title"/>
+                    <Text profile="uwm_cardSub" name="sub"/>
+                    <Text profile="uwm_cardStatus" name="status"/>
+                    <Text profile="uwm_cardAmount" name="amount"/>
+                    <Bitmap profile="uwm_cardArrow" name="uwmImg_arrow"/>
                 </ListItem>
             </SmoothList>
             <Text profile="uwm_emptyText" position="540px -400px" id="boardEmpty"/>
@@ -181,7 +157,16 @@
             <!-- bottom line + footer: depot status (left), farm manager or not (right) -->
             <ThreePartBitmap profile="fs25_lineSeparatorTop" position="-63px -723px" size="100% 1dp"/>
             <Text profile="uwm_footerText" position="-43px -733px" id="depotText"/>
-            <Text profile="uwm_footerTextRight" position="887px -733px" id="managerText"/>
+            <Text profile="uwm_footerTextRight" position="520px -733px" id="managerText"/>
+            <!-- delete finished invoices (mock-up previews/menu_v6_delete_finished.png, user OK'd 2026-10-30) -->
+            <GuiElement profile="uwm_clearBox" id="clearBox">
+                <Bitmap profile="uwm_clearEdge" name="uwmImg_solid"/>
+                <Bitmap profile="uwm_clearBg" name="uwmImg_solid"/>
+                <Text profile="uwm_clearText" text="$l10n_uwm_button_clearFinished"/>
+                <Bitmap profile="uwm_clearCountTile" name="uwmImg_tile"/>
+                <Text profile="uwm_clearCount" id="clearCount"/>
+                <Button profile="uwm_clearButton" id="clearButton" onClick="onClickClearFinished"/>
+            </GuiElement>
         </GuiElement>
 
         <!-- scroll bars, docked at the right edge like the game's own lists -->
@@ -382,6 +367,69 @@
         <Profile name="uwm_rowCellDim" extends="uwm_rowCell">
             <textSize value="14px"/>
             <textLayoutMode value="scrolling"/>
+        </Profile>
+
+        <Profile name="uwm_sectionLabel" extends="baseReference" with="anchorTopLeft">
+            <size value="1200px 30px"/>
+            <textSize value="14px"/>
+            <textBold value="true"/>
+            <textUpperCase value="true"/>
+            <textColor value="0.431 0.439 0.412 1"/>
+            <textAlignment value="left"/>
+            <textVerticalAlignment value="middle"/>
+        </Profile>
+
+        <!-- delete finished: outlined card with a red edge and a count tile, an invisible button on top -->
+        <Profile name="uwm_clearBox" extends="emptyPanel" with="anchorTopLeft">
+            <position value="1137px -727px"/>
+            <size value="380px 40px"/>
+        </Profile>
+        <Profile name="uwm_clearEdge" extends="baseReference" with="anchorTopLeft">
+            <size value="380px 40px"/>
+            <imageColor value="0.784 0.353 0.314 1"/>
+        </Profile>
+        <Profile name="uwm_clearBg" extends="baseReference" with="anchorTopLeft">
+            <position value="2px -2px"/>
+            <size value="376px 36px"/>
+            <imageColor value="0.110 0.114 0.106 1"/>
+        </Profile>
+        <Profile name="uwm_clearText" extends="baseReference" with="anchorTopLeft">
+            <position value="20px 0px"/>
+            <size value="300px 40px"/>
+            <textSize value="14px"/>
+            <textBold value="true"/>
+            <textUpperCase value="true"/>
+            <textColor value="$preset_colorWhite"/>
+            <textAlignment value="left"/>
+            <textVerticalAlignment value="middle"/>
+        </Profile>
+        <Profile name="uwm_clearCountTile" extends="baseReference" with="anchorTopLeft">
+            <position value="338px -6px"/>
+            <size value="28px 28px"/>
+            <imageColor value="0.157 0.173 0.133 1"/>
+        </Profile>
+        <Profile name="uwm_clearCount" extends="baseReference" with="anchorTopLeft">
+            <position value="338px -6px"/>
+            <size value="28px 28px"/>
+            <textSize value="14px"/>
+            <textBold value="true"/>
+            <textColor value="0.667 0.667 0.647 1"/>
+            <textAlignment value="center"/>
+            <textVerticalAlignment value="middle"/>
+        </Profile>
+        <Profile name="uwm_clearButton" extends="baseReference" with="anchorTopLeft">
+            <size value="380px 40px"/>
+            <handleFocus value="false"/>
+            <hideKeyboardGlyph value="true"/>
+            <imageColor value="0 0 0 0"/>
+            <imageFocusedColor value="0 0 0 0"/>
+            <imageHighlightedColor value="0 0 0 0"/>
+            <imageSelectedColor value="0 0 0 0"/>
+            <imageDisabledColor value="0 0 0 0"/>
+            <textColor value="0 0 0 0"/>
+            <textFocusedColor value="0 0 0 0"/>
+            <textHighlightedColor value="0 0 0 0"/>
+            <textSelectedColor value="0 0 0 0"/>
         </Profile>
 
         <Profile name="uwm_sectionTitle" extends="baseReference" with="anchorTopLeft">

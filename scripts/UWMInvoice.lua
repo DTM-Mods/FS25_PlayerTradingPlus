@@ -1,4 +1,4 @@
--- Utilities & Waste Management: one invoice (a one-off trade or a standing contract) between two farms.
+-- Player Trading+: one invoice (a one-off trade or a standing contract) between two farms.
 -- Author: PropaineX
 
 UWMInvoice = {}

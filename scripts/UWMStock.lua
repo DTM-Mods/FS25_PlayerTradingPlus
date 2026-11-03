@@ -1,4 +1,4 @@
--- Utilities & Waste Management: a farm's stock of the traded goods, taking it out and putting electricity in.
+-- Player Trading+: a farm's stock of the traded goods, taking it out and putting electricity in.
 -- Author: PropaineX
 --
 -- Stock = every storage on a placeable the farm owns: animal pens (slurry pits) and manure heaps first, then
@@ -19,12 +19,12 @@ UWMStock.isMovingGoods = false
 -- back to the real storage, so both the quantity sold and the money earned exclude held goods.
 -- The real storage is never emptied temporarily; loading stations and save/network state keep it.
 function UWMStock.updateProductionSales(chain, superFunc, ...)
-    local manager = UtilitiesWasteManagement.manager
+    local manager = PlayerTradingPlus.manager
     if not chain.isServer or manager == nil then
         return superFunc(chain, ...)
     end
     local heldByStorage = {}
-    for _, good in ipairs(UtilitiesWasteManagement.goods) do
+    for _, good in ipairs(PlayerTradingPlus.goods) do
         local ft = good.fillTypeIndex
         local farms = {}
         for _, point in pairs(chain.productionPoints or {}) do
@@ -202,7 +202,7 @@ function UWMStock.getSourceStorages(farmId, fillTypeIndex)
         if fillTypeIndex == FillType.ELECTRICCHARGE then
             usable = entry.kind == UWMStock.KIND_PRODUCTION
                 and UWMStock.getProductionMakesOutput(entry.placeable.spec_productionPoint.productionPoint, fillTypeIndex)
-        elseif UtilitiesWasteManagement.getIsBulk(fillTypeIndex) then
+        elseif PlayerTradingPlus.getIsBulk(fillTypeIndex) then
             -- bulk: only what can be taken out to sell - silos, and what productions made (not their inputs,
             -- not animal pens: user, 2026-10-28 "I don't need to see my goat milk in my dairy")
             usable = UWMStock.getIsSellableSource(entry, fillTypeIndex)
@@ -230,7 +230,7 @@ function UWMStock.getBulkGoods(farmId)
         local levels = entry.storage.fillLevels
         if levels ~= nil then
             for fillTypeIndex in pairs(levels) do
-                if not found[fillTypeIndex] and UtilitiesWasteManagement.getIsBulk(fillTypeIndex)
+                if not found[fillTypeIndex] and PlayerTradingPlus.getIsBulk(fillTypeIndex)
                     and UWMStock.getIsSellableSource(entry, fillTypeIndex) then
                     found[fillTypeIndex] = true
                 end
@@ -241,7 +241,7 @@ function UWMStock.getBulkGoods(farmId)
     for fillTypeIndex in pairs(found) do
         local liters = UWMStock.getAvailable(farmId, fillTypeIndex, nil)
         if liters >= 1 then
-            table.insert(goods, {fillTypeIndex = fillTypeIndex, name = UtilitiesWasteManagement.getGoodName(fillTypeIndex), liters = liters})
+            table.insert(goods, {fillTypeIndex = fillTypeIndex, name = PlayerTradingPlus.getGoodName(fillTypeIndex), liters = liters})
         end
     end
     table.sort(goods, function(a, b)
@@ -254,8 +254,8 @@ end
 function UWMStock.getAllBulkGoods()
     local goods = {}
     for _, fillType in ipairs(g_fillTypeManager:getFillTypes()) do
-        if UtilitiesWasteManagement.getIsBulk(fillType.index) then
-            table.insert(goods, {fillTypeIndex = fillType.index, name = UtilitiesWasteManagement.getGoodName(fillType.index)})
+        if PlayerTradingPlus.getIsBulk(fillType.index) then
+            table.insert(goods, {fillTypeIndex = fillType.index, name = PlayerTradingPlus.getGoodName(fillType.index)})
         end
     end
     table.sort(goods, function(a, b)
@@ -276,8 +276,8 @@ end
 -- doesn't count against itself)
 function UWMStock.getAvailable(farmId, fillTypeIndex, exceptInvoice)
     local reserved = 0
-    if UtilitiesWasteManagement.manager ~= nil then
-        reserved = UtilitiesWasteManagement.manager:getReservedLiters(farmId, fillTypeIndex, exceptInvoice)
+    if PlayerTradingPlus.manager ~= nil then
+        reserved = PlayerTradingPlus.manager:getReservedLiters(farmId, fillTypeIndex, exceptInvoice)
     end
     return math.max(UWMStock.getStock(farmId, fillTypeIndex) - reserved, 0)
 end
@@ -386,7 +386,7 @@ end
 -- (called from LoadTrigger:update); the amount is cut down to what isn't reserved. Buyers collecting there go
 -- through UWMPickup instead, which installs the hook and calls this for everyone else.
 function UWMStock.addFillLevelToFillableObject(station, superFunc, fillableObject, fillUnitIndex, fillTypeIndex, fillDelta, ...)
-    local manager = UtilitiesWasteManagement.manager
+    local manager = PlayerTradingPlus.manager
     if manager ~= nil and station.isServer and not UWMStock.isMovingGoods and fillDelta ~= nil and fillDelta > 0
         and station.owningPlaceable ~= nil then
         local farmId = station.owningPlaceable:getOwnerFarmId()

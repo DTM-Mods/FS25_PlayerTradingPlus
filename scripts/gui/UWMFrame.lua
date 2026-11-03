@@ -1,4 +1,4 @@
--- Utilities & Waste Management: the "Utilities" page in the ESC menu.
+-- Player Trading+: the "Player Trading+" page in the ESC menu.
 -- Tabs (user's layout, 2026-10-24): INCOMING (invoices other farms sent you), OUTGOING (sent by you), STANDING ORDERS
 -- with sub-tabs MARKET (other farms' open standing orders + your open deals), MY ORDERS, MY DEALS. Only the farm
 -- manager gets the trade buttons. The header shows the farm's depot status and balance; the Depot button answers the
@@ -8,7 +8,7 @@
 UWMFrame = {}
 local UWMFrame_mt = Class(UWMFrame, TabbedMenuFrameElement)
 
-UWMFrame.PAGE_NAME = "pageUtilitiesWasteManagement"
+UWMFrame.PAGE_NAME = "pagePlayerTradingPlus"
 UWMFrame.ICON_FILENAME = "gui/uwm_tabIcon.dds"
 UWMFrame.ICON_SIZE = 256
 
@@ -67,12 +67,12 @@ function UWMFrame.register()
     end
     local inGameMenu = g_gui.screenControllers[InGameMenu]
     if inGameMenu == nil or inGameMenu.pagingElement == nil or inGameMenu.registerPage == nil or inGameMenu.addPageTab == nil then
-        Logging.warning("%s the ESC menu can't take new pages, the Utilities page is not added", UtilitiesWasteManagement.TAG)
+        Logging.warning("%s the ESC menu can't take new pages, the Player Trading+ page is not added", PlayerTradingPlus.TAG)
         return
     end
 
     local frame = UWMFrame.new()
-    g_gui:loadGui(UtilitiesWasteManagement.modDirectory .. "gui/UWMFrame.xml", "UWMFrame", frame, true)
+    g_gui:loadGui(PlayerTradingPlus.modDirectory .. "gui/UWMFrame.xml", "UWMFrame", frame, true)
 
     local pageName = UWMFrame.PAGE_NAME
     inGameMenu.controlIDs[pageName] = nil
@@ -97,7 +97,7 @@ function UWMFrame.register()
     -- the tab only shows while a depot stands on the map (user's rule); the menu asks again every time it opens
     inGameMenu:registerPage(frame, position, UWMFrame.getIsPageEnabled)
     -- tab icon: our water drop with a lightning bolt (user, 2026-10-24)
-    inGameMenu:addPageTab(frame, UtilitiesWasteManagement.modDirectory .. UWMFrame.ICON_FILENAME, UWMFrame.getIconUVs())
+    inGameMenu:addPageTab(frame, PlayerTradingPlus.modDirectory .. UWMFrame.ICON_FILENAME, UWMFrame.getIconUVs())
     if inGameMenu.pageFrames ~= nil then
         moveToPosition(inGameMenu.pageFrames, frame, position, function(element) return element end)
     end
@@ -105,11 +105,11 @@ function UWMFrame.register()
 
     frame:initialize()
     UWMFrame.instance = frame
-    print(UtilitiesWasteManagement.TAG .. " Utilities page added to the ESC menu")
+    print(PlayerTradingPlus.TAG .. " Player Trading+ page added to the ESC menu")
 end
 
 function UWMFrame.getIsPageEnabled()
-    local manager = UtilitiesWasteManagement.manager
+    local manager = PlayerTradingPlus.manager
     return manager ~= nil and manager:getHasDepot()
 end
 
@@ -224,7 +224,7 @@ end
 ----------------------------------------------------------------------------------------------------------------
 
 local function getText(key)
-    return UtilitiesWasteManagement.getText(key)
+    return PlayerTradingPlus.getText(key)
 end
 
 function UWMFrame.getInvoiceNumber(invoice)
@@ -241,7 +241,7 @@ end
 
 function UWMFrame.getPriceText(fillTypeIndex, pricePer1000)
     local key = fillTypeIndex == FillType.ELECTRICCHARGE and "uwm_pricePer1000kWh" or "uwm_pricePer1000"
-    return string.format(getText(key), UtilitiesWasteManagement.formatMoney(pricePer1000))
+    return string.format(getText(key), PlayerTradingPlus.formatMoney(pricePer1000))
 end
 
 function UWMFrame.getRepeatText(invoice)
@@ -255,7 +255,7 @@ end
 
 -- "Slurry, 10,000 l (you buy)"
 function UWMFrame.getDescriptionText(invoice, farmId)
-    local UWM = UtilitiesWasteManagement
+    local UWM = PlayerTradingPlus
     local amount
     if invoice.amountMode == UWMInvoice.AMOUNT.ALL then
         amount = getText("uwm_amount_all")
@@ -273,15 +273,15 @@ end
 -- money of the invoice: the agreed total, or what was paid so far for "all of it"
 function UWMFrame.getAmountText(invoice)
     if invoice.amountMode == UWMInvoice.AMOUNT.FIXED then
-        return UtilitiesWasteManagement.formatMoney(invoice:getPrice(invoice.liters))
+        return PlayerTradingPlus.formatMoney(invoice:getPrice(invoice.liters))
     elseif invoice.totalMoney > 0 then
-        return UtilitiesWasteManagement.formatMoney(invoice.totalMoney)
+        return PlayerTradingPlus.formatMoney(invoice.totalMoney)
     end
     return "-"
 end
 
 function UWMFrame.getStatusText(invoice, farmId)
-    local UWM = UtilitiesWasteManagement
+    local UWM = PlayerTradingPlus
     local parts = {}
 
     if invoice.state == STATE.PENDING then
@@ -341,10 +341,10 @@ function UWMFrame.getInvoiceRow(invoice, farmId)
     }, 6, UWMFrame.getStatusColor(invoice, farmId)
 end
 
--- an invoice as a card (Utilities page, user OK'd mock-up previews/menu_v4_incoming.png):
+-- an invoice as a card (Player Trading+ page, user OK'd mock-up previews/menu_v4_incoming.png):
 -- {icon, title, sub, status, statusColor (UWMGui.COLOR name), amount}
 function UWMFrame.getInvoiceCard(invoice, farmId)
-    local UWM = UtilitiesWasteManagement
+    local UWM = PlayerTradingPlus
     local ft = invoice.fillTypeIndex
     local amount = invoice.amountMode == UWMInvoice.AMOUNT.ALL and getText("uwm_amount_all") or UWM.formatAmount(ft, invoice.liters)
     local title = string.format(getText(invoice.isPallet and "uwm_card_titlePallets" or "uwm_card_title"), UWM.getGoodName(ft), amount)
@@ -383,7 +383,7 @@ end
 
 -- the four summary cards: waiting for you, running, at the depot for you, your goods for sale (texts)
 function UWMFrame.getSummary(manager, farmId)
-    local UWM = UtilitiesWasteManagement
+    local UWM = PlayerTradingPlus
     local waiting, running, toCollect = 0, 0, 0
     if manager ~= nil then
         for _, invoice in ipairs(manager.invoices) do
@@ -425,7 +425,7 @@ end
 
 -- MARKET: farm | type | product | left | of | price | held
 function UWMFrame.getMarketRow(listing)
-    local UWM = UtilitiesWasteManagement
+    local UWM = PlayerTradingPlus
     local ft = listing.fillTypeIndex
     return {
         UWMManager.getFarmName(listing.farmId),
@@ -449,7 +449,7 @@ end
 
 -- MY ORDERS: # | type | product | left | of | deals | price | status
 function UWMFrame.getOrderRow(listing)
-    local UWM = UtilitiesWasteManagement
+    local UWM = PlayerTradingPlus
     local ft = listing.fillTypeIndex
     local color = UWMFrame.COLOR_GOOD
     if listing.state == LSTATE.DONE then
@@ -471,7 +471,7 @@ end
 
 -- MY DEALS: # | day | farm | product | volume | amount | you | status
 function UWMFrame.getDealRow(invoice, farmId)
-    local UWM = UtilitiesWasteManagement
+    local UWM = PlayerTradingPlus
     return {
         UWMFrame.getInvoiceNumber(invoice),
         UWMFrame.getDayText(invoice.createdDay),
@@ -486,7 +486,7 @@ end
 
 -- MARKET, lower panel: farm | product | volume | amount | to collect
 function UWMFrame.getOpenDealRow(invoice, farmId)
-    local UWM = UtilitiesWasteManagement
+    local UWM = PlayerTradingPlus
     local ft = invoice.fillTypeIndex
     local toCollect = "-"
     if not invoice:getIsElectricity() then
@@ -501,6 +501,55 @@ function UWMFrame.getOpenDealRow(invoice, farmId)
         UWM.formatAmount(ft, invoice.liters),
         UWMFrame.getAmountText(invoice),
         toCollect
+    }
+end
+
+-- a standing order as a card (mock-up previews/menu_v5_standing.png): market = other farms' orders, pill = for sale /
+-- wanted; my orders = pill = open / complete / withdrawn. Amount = the price.
+function UWMFrame.getListingCard(listing, farmId)
+    local UWM = PlayerTradingPlus
+    local ft = listing.fillTypeIndex
+    local amount = string.format(getText("uwm_card_left"), UWM.formatAmount(ft, listing:getIsOpen() and listing.remaining or 0),
+        UWM.formatAmount(ft, listing.liters))
+    local title = string.format(getText(listing.isPallet and "uwm_card_titlePallets" or "uwm_card_title"), UWM.getGoodName(ft), amount)
+
+    local isMine = listing.farmId == farmId
+    local parts = {UWMFrame.getListingNumber(listing)}
+    if isMine then
+        table.insert(parts, UWMFrame.getListingTypeText(listing))
+        table.insert(parts, string.format(getText("uwm_card_deals"), listing.trades))
+    else
+        table.insert(parts, UWMManager.getFarmName(listing.farmId))
+        table.insert(parts, getText(listing:getIsOffer() and "uwm_held_stock" or "uwm_held_money"))
+    end
+    if listing.discountPercent > 0 then
+        table.insert(parts, string.format(getText("uwm_card_discount"), UWMManager.formatPercent(listing.discountPercent)))
+    end
+    if UWMManager.getUsesDepot(ft) then
+        table.insert(parts, getText(UWMOrderDialog.getPickupPointKey(ft, listing.isPallet)))
+    end
+
+    local status, color
+    if isMine then
+        status = UWMFrame.getListingStatusText(listing)
+        color = "greenLight"
+        if listing.state == LSTATE.DONE then
+            color = "dim"
+        elseif listing.state == LSTATE.CANCELLED then
+            color = "orange"
+        end
+    else
+        status = UWMFrame.getListingTypeText(listing)
+        color = listing:getIsOffer() and "greenLight" or "blue"
+    end
+
+    return {
+        icon = UWMGui.getGoodsIcon(ft, listing.isPallet),
+        title = title,
+        sub = table.concat(parts, "  -  "),
+        status = status,
+        statusColor = color,
+        amount = UWMFrame.getPriceText(ft, listing.pricePer1000)
     }
 end
 
@@ -526,9 +575,10 @@ function UWMFrame:initialize()
     self.detailsButtonInfo = button(InputAction.MENU_EXTRA_1, "uwm_button_details", function() self:onClickDetails() end)
     self.secondButtonInfo = button(InputAction.MENU_EXTRA_2, nil, function() self:onClickSecond() end)
     self.depotButtonInfo = button(InputAction.MENU_CANCEL, "uwm_button_depot", function() self:onClickDepot() end)
+    self.clearButtonInfo = button(InputAction.MENU_EXTRA_3, "uwm_button_clearFinishedKey", function() self:onClickClearFinished() end)
 
     if self.headerIcon ~= nil then
-        self.headerIcon:setImageFilename(UtilitiesWasteManagement.modDirectory .. UWMFrame.ICON_FILENAME)
+        self.headerIcon:setImageFilename(PlayerTradingPlus.modDirectory .. UWMFrame.ICON_FILENAME)
         self.headerIcon:setImageUVs(nil, unpack(UWMFrame.getIconUVs()))
     end
     if self.mainPaging ~= nil then
@@ -561,7 +611,7 @@ end
 
 function UWMFrame:onFrameOpen(element)
     UWMFrame:superClass().onFrameOpen(self)
-    local manager = UtilitiesWasteManagement.manager
+    local manager = PlayerTradingPlus.manager
     if manager ~= nil then
         manager:removeChangeListener(self)
         manager:addChangeListener(self.refresh, self)
@@ -574,7 +624,7 @@ end
 
 function UWMFrame:onFrameClose()
     UWMFrame:superClass().onFrameClose(self)
-    local manager = UtilitiesWasteManagement.manager
+    local manager = PlayerTradingPlus.manager
     if manager ~= nil then
         manager:removeChangeListener(self)
     end
@@ -583,8 +633,8 @@ end
 
 function UWMFrame:updateBalance()
     if self.balanceText ~= nil then
-        local farmId = UtilitiesWasteManagement.getLocalFarmId()
-        self.balanceText:setText(UtilitiesWasteManagement.formatMoney(UWMManager.getFarmBalance(farmId)))
+        local farmId = PlayerTradingPlus.getLocalFarmId()
+        self.balanceText:setText(PlayerTradingPlus.formatMoney(UWMManager.getFarmBalance(farmId)))
     end
 end
 
@@ -641,24 +691,17 @@ function UWMFrame:showTab(tab, subTab)
         self.boardPaging:setState(self.subTab)
     end
 
-    for _, element in ipairs({self.invoiceList, self.invoiceSlider, self.summaryBox}) do
+    for _, element in ipairs({self.invoiceList, self.invoiceSlider}) do
         setVisible(element, not isBoard)
     end
     for _, element in ipairs({self.boardTabBox, self.boardTabLine, self.boardPaging}) do
         setVisible(element, isBoard)
     end
-    for _, element in ipairs({self.marketHeader, self.marketHeaderLine, self.marketList, self.dealsHeader, self.dealsList}) do
+    for _, element in ipairs({self.marketHeader, self.marketList, self.dealsLine, self.dealsHeader, self.dealsList}) do
         setVisible(element, isMarket)
     end
-    for _, element in ipairs({self.boardHeader, self.boardHeaderLine, self.boardList, self.boardSlider}) do
+    for _, element in ipairs({self.boardList, self.boardSlider}) do
         setVisible(element, isBoardList)
-    end
-    if isBoardList then
-        for i, key in ipairs(UWMFrame.BOARD_COLUMNS[self.subTab]) do
-            if self.boardColumns ~= nil and self.boardColumns[i] ~= nil then
-                self.boardColumns[i]:setText(getText(key))
-            end
-        end
     end
 
     self:refresh()
@@ -684,12 +727,12 @@ function UWMFrame:updateSummary(manager, farmId)
 end
 
 function UWMFrame:refresh()
-    local farmId = UtilitiesWasteManagement.getLocalFarmId()
-    local manager = UtilitiesWasteManagement.manager
+    local farmId = PlayerTradingPlus.getLocalFarmId()
+    local manager = PlayerTradingPlus.manager
     self.lists = UWMFrame.buildLists(manager, farmId)
 
     if self.managerText ~= nil then
-        local key = UtilitiesWasteManagement.getLocalIsManager() and "uwm_managerYes" or "uwm_managerNo"
+        local key = PlayerTradingPlus.getLocalIsManager() and "uwm_managerYes" or "uwm_managerNo"
         self.managerText:setText(getText(key))
     end
     if self.depotText ~= nil then
@@ -761,8 +804,8 @@ end
 
 function UWMFrame:updateButtons()
     local buttons = {self.backButtonInfo}
-    local farmId = UtilitiesWasteManagement.getLocalFarmId()
-    local isManager = UtilitiesWasteManagement.getLocalIsManager()
+    local farmId = PlayerTradingPlus.getLocalFarmId()
+    local isManager = PlayerTradingPlus.getLocalIsManager()
     local item = self.selected
 
     if isManager then
@@ -783,6 +826,20 @@ function UWMFrame:updateButtons()
     end
     if #UWMFrame.getDepotOptions(farmId, isManager, UWMFrame.getLocalIsAdmin()) > 0 then
         table.insert(buttons, self.depotButtonInfo)
+    end
+
+    local manager = PlayerTradingPlus.manager
+    local finished = manager ~= nil and UWMFrame.getFinishedCount(manager, farmId) or 0
+    local showClear = isManager and self.tab ~= UWMFrame.TAB_BOARD
+    if self.clearBox ~= nil then
+        self.clearBox:setVisible(showClear)
+        self.clearBox:setAlpha(finished > 0 and 1 or 0.4)
+    end
+    if self.clearCount ~= nil then
+        self.clearCount:setText(tostring(finished))
+    end
+    if showClear and finished > 0 then
+        table.insert(buttons, self.clearButtonInfo)
     end
 
     self.menuButtons = buttons
@@ -831,17 +888,17 @@ function UWMFrame:populateCellForItemInSection(list, section, index, cell)
     if item == nil then
         return
     end
-    local farmId = UtilitiesWasteManagement.getLocalFarmId()
+    local farmId = PlayerTradingPlus.getLocalFarmId()
     if list == self.invoiceList then
         UWMFrame.fillInvoiceCard(cell, UWMFrame.getInvoiceCard(item, farmId))
     elseif list == self.marketList then
-        fillCells(cell, UWMFrame.getMarketRow(item))
+        UWMFrame.fillInvoiceCard(cell, UWMFrame.getListingCard(item, farmId))
     elseif list == self.dealsList then
-        fillCells(cell, UWMFrame.getOpenDealRow(item, farmId))
+        UWMFrame.fillInvoiceCard(cell, UWMFrame.getInvoiceCard(item, farmId))
     elseif self.subTab == UWMFrame.SUB_MY_ORDERS then
-        fillCells(cell, UWMFrame.getOrderRow(item))
+        UWMFrame.fillInvoiceCard(cell, UWMFrame.getListingCard(item, farmId))
     else
-        fillCells(cell, UWMFrame.getDealRow(item, farmId))
+        UWMFrame.fillInvoiceCard(cell, UWMFrame.getInvoiceCard(item, farmId))
     end
 end
 
@@ -917,7 +974,7 @@ function UWMFrame:onClickDetails()
     if item == nil then
         return
     end
-    local farmId = UtilitiesWasteManagement.getLocalFarmId()
+    local farmId = PlayerTradingPlus.getLocalFarmId()
     if item.isListing then
         InfoDialog.show(UWMFrame.getListingDetailsText(item, farmId))
     else
@@ -939,14 +996,14 @@ function UWMFrame:onClickSecond()
     if item == nil then
         return
     end
-    local _, secondKey = UWMFrame.getActions(item, UtilitiesWasteManagement.getLocalFarmId(), true)
+    local _, secondKey = UWMFrame.getActions(item, PlayerTradingPlus.getLocalFarmId(), true)
     local ACTION = UWMManager.ACTION
 
     if secondKey == "uwm_button_delete" then
         self:askDelete(item)
     elseif item.isListing then
         local key = item:getIsOffer() and "uwm_confirm_withdrawOffer" or "uwm_confirm_withdrawWanted"
-        confirm(self, string.format(getText(key), UtilitiesWasteManagement.formatMoney(item:getHeldMoney())), function()
+        confirm(self, string.format(getText(key), PlayerTradingPlus.formatMoney(item:getHeldMoney())), function()
             UWMRequestEvent.sendRequest(ACTION.WITHDRAW_LISTING, {listingId = item.id})
         end)
     elseif secondKey == "uwm_button_decline" then
@@ -964,10 +1021,25 @@ function UWMFrame:onClickSecond()
     end
 end
 
+-- the Delete finished button in the footer (and its key): every finished invoice of this farm, after a Yes
+function UWMFrame:onClickClearFinished()
+    local manager = PlayerTradingPlus.manager
+    if manager == nil or not PlayerTradingPlus.getLocalIsManager() then
+        return
+    end
+    local count = UWMFrame.getFinishedCount(manager, PlayerTradingPlus.getLocalFarmId())
+    if count == 0 then
+        return
+    end
+    confirm(self, string.format(getText("uwm_confirm_clearHistory"), count), function()
+        UWMRequestEvent.sendRequest(UWMManager.ACTION.CLEAR_HISTORY, {})
+    end)
+end
+
 -- delete this one, or everything finished (Clear history)
 function UWMFrame:askDelete(item)
-    local manager = UtilitiesWasteManagement.manager
-    local count = manager ~= nil and UWMFrame.getFinishedCount(manager, UtilitiesWasteManagement.getLocalFarmId()) or 0
+    local manager = PlayerTradingPlus.manager
+    local count = manager ~= nil and UWMFrame.getFinishedCount(manager, PlayerTradingPlus.getLocalFarmId()) or 0
     local options = {getText("uwm_delete_one"), string.format(getText("uwm_delete_all"), count)}
     local ACTION = UWMManager.ACTION
     OptionDialog.show(function(index)
@@ -992,7 +1064,7 @@ function UWMFrame.addDiscountLines(lines, invoice, farmId)
     if invoice.discountPercent <= 0 then
         return
     end
-    local UWM = UtilitiesWasteManagement
+    local UWM = PlayerTradingPlus
     local isBuyer = invoice.buyerFarmId == farmId
     local discount, paid
     if invoice.amountMode == UWMInvoice.AMOUNT.FIXED then
@@ -1007,7 +1079,7 @@ function UWMFrame.addDiscountLines(lines, invoice, farmId)
 end
 
 function UWMFrame.getDetailsText(invoice, farmId)
-    local UWM = UtilitiesWasteManagement
+    local UWM = PlayerTradingPlus
     local ft = invoice.fillTypeIndex
     local isElectricity = invoice:getIsElectricity()
     local lines = {}
@@ -1065,7 +1137,7 @@ end
 
 -- everything about one standing order
 function UWMFrame.getListingDetailsText(listing, farmId)
-    local UWM = UtilitiesWasteManagement
+    local UWM = PlayerTradingPlus
     local ft = listing.fillTypeIndex
     local lines = {}
     local function add(key, ...)
@@ -1077,6 +1149,9 @@ function UWMFrame.getListingDetailsText(listing, farmId)
     table.insert(lines, "")
     add("uwm_details_listingTotal", UWM.formatAmount(ft, listing.liters))
     add("uwm_details_price", UWMFrame.getPriceText(ft, listing.pricePer1000))
+    if listing.discountPercent > 0 then
+        table.insert(lines, string.format(getText("uwm_card_discount"), UWMManager.formatPercent(listing.discountPercent)))
+    end
     if listing:getIsOpen() then
         add("uwm_details_listingLeft", UWM.formatAmount(ft, listing.remaining))
     end
@@ -1114,7 +1189,7 @@ end
 
 -- one line for the header
 function UWMFrame.getDepotStatusText(farmId)
-    local UWM = UtilitiesWasteManagement
+    local UWM = PlayerTradingPlus
     local manager = UWM.manager
     if manager == nil or not manager:getHasDepot() then
         return UWM.getText("uwm_depot_none")
@@ -1145,7 +1220,7 @@ end
 
 -- what the Depot button offers this player: list of {text, action, flag}
 function UWMFrame.getDepotOptions(farmId, isManager, isAdmin)
-    local UWM = UtilitiesWasteManagement
+    local UWM = PlayerTradingPlus
     local manager = UWM.manager
     local options = {}
     if manager == nil then
@@ -1179,7 +1254,7 @@ function UWMFrame.getDepotOptions(farmId, isManager, isAdmin)
 end
 
 function UWMFrame:onClickDepot()
-    local UWM = UtilitiesWasteManagement
+    local UWM = PlayerTradingPlus
     local farmId = UWM.getLocalFarmId()
     local options = UWMFrame.getDepotOptions(farmId, UWM.getLocalIsManager(), UWMFrame.getLocalIsAdmin())
     if #options == 0 then

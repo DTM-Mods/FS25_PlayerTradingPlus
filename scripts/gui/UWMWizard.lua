@@ -1,4 +1,4 @@
--- Utilities & Waste Management: writing a new invoice and accepting one, step by step with the game's own
+-- Player Trading+: writing a new invoice and accepting one, step by step with the game's own
 -- dialogs (choose from a list, type a number, yes/no).
 -- New invoice: sell or buy -> other farm -> good -> amount -> price -> one-off / daily / weekly
 --   -> buyer's choices (reserve, or the productions that get the electricity) -> confirm.
@@ -12,7 +12,7 @@ UWMWizard = {}
 local UWMWizard_mt = Class(UWMWizard)
 
 local function getText(key)
-    return UtilitiesWasteManagement.getText(key)
+    return PlayerTradingPlus.getText(key)
 end
 
 -- electricity is counted in kWh: its texts have a "KWh" twin (uwm_wizard_liters -> uwm_wizard_litersKWh)
@@ -25,7 +25,7 @@ end
 
 function UWMWizard.new()
     local self = setmetatable({}, UWMWizard_mt)
-    self.farmId = UtilitiesWasteManagement.getLocalFarmId()
+    self.farmId = PlayerTradingPlus.getLocalFarmId()
     self.invoice = UWMInvoice.new()
     self.targetPlaceables = {}  -- the buyer's chosen electricity productions (objects, see UWMRequestEvent)
     return self
@@ -57,6 +57,9 @@ function UWMWizard.startAccept(invoice)
         wizard:askBuyerOptions(function()
             wizard:confirmAccept()
         end)
+    elseif invoice.creatorFarmId == invoice.buyerFarmId then
+        -- a request: the seller approves it in the CO-OP window and may give a discount
+        UWMApproveDialog.show(invoice)
     else
         wizard:confirmAccept()
     end
@@ -66,7 +69,7 @@ end
 -- The UWM CO-OP form (gui/UWMOrderDialog): one item per invoice. The form gives the choices in one go, the rest
 -- (buyer's reserve / electricity productions, confirm, request to the server) runs through the steps below.
 -- form = {mode, otherFarmId, fillTypeIndex, amountAll, liters, pricePer1000, discountPercent, repeatDays}
--- (discount: invoices and requests only, not standing orders)
+-- (discount: bills and standing sell orders; a request gets its discount from the seller when approved)
 ----------------------------------------------------------------------------------------------------------------
 
 UWMWizard.FORM = {
@@ -75,6 +78,11 @@ UWMWizard.FORM = {
     WANTED = 3,     -- standing buy order on the market
     OFFER = 4       -- standing sell order on the market
 }
+
+-- the seller fills in the discount: a bill or a standing sell order (a request: the seller sets it when approving)
+function UWMWizard.getFormHasDiscount(mode)
+    return mode == UWMWizard.FORM.BILL or mode == UWMWizard.FORM.OFFER
+end
 
 function UWMWizard.getFormIsListing(mode)
     return mode == UWMWizard.FORM.WANTED or mode == UWMWizard.FORM.OFFER
@@ -85,7 +93,7 @@ function UWMWizard.getFormError(form)
     if not UWMWizard.getFormIsListing(form.mode) and form.otherFarmId == nil then
         return "uwm_error_formNoFarm"
     end
-    if not UtilitiesWasteManagement.getIsTradable(form.fillTypeIndex) then
+    if not PlayerTradingPlus.getIsTradable(form.fillTypeIndex) then
         return "uwm_error_formNoGood"
     end
     if form.isPallet and not UWMPallets.getIsPalletGood(form.fillTypeIndex) then
@@ -99,7 +107,7 @@ function UWMWizard.getFormError(form)
         return "uwm_error_badPrice"
     end
     local discount = form.discountPercent or 0
-    if not UWMWizard.getFormIsListing(form.mode) and not (discount >= 0 and discount < 100) then
+    if not (discount >= 0 and discount < 100) then
         return "uwm_error_badDiscount"
     end
     return nil
@@ -118,6 +126,7 @@ function UWMWizard.startForm(form)
     invoice.pricePer1000 = form.pricePer1000
     invoice.isPallet = form.isPallet == true
     invoice.palletSize = form.palletSize or UWMPallets.SIZES[1]
+    invoice.discountPercent = UWMWizard.getFormHasDiscount(form.mode) and (form.discountPercent or 0) or 0
 
     if UWMWizard.getFormIsListing(form.mode) then
         wizard.listingKind = form.mode == UWMWizard.FORM.OFFER and UWMListing.KIND.OFFER or UWMListing.KIND.WANTED
@@ -147,7 +156,6 @@ function UWMWizard.startForm(form)
         invoice.liters = form.liters
     end
     invoice.repeatDays = form.repeatDays or UWMInvoice.REPEAT_ONCE
-    invoice.discountPercent = form.discountPercent or 0
 
     if wizard.isBill then
         wizard:confirmNew()
@@ -212,7 +220,7 @@ function UWMWizard:askFarm()
 end
 
 function UWMWizard:askGood()
-    local goods = UtilitiesWasteManagement.goods
+    local goods = PlayerTradingPlus.goods
     local options = {}
     for _, good in ipairs(goods) do
         table.insert(options, getText(good.textKey))
@@ -283,7 +291,7 @@ function UWMWizard:askPrice()
     local prompt = getText(unitKey(self.invoice, "uwm_wizard_price"))
     local market = self:getMarketPricePer1000()
     if market ~= nil then
-        prompt = prompt .. "\n" .. string.format(getText(unitKey(self.invoice, "uwm_wizard_marketHint")), UtilitiesWasteManagement.formatMoney(market))
+        prompt = prompt .. "\n" .. string.format(getText(unitKey(self.invoice, "uwm_wizard_marketHint")), PlayerTradingPlus.formatMoney(market))
     end
     local default = market ~= nil and tostring(math.floor(market + 0.5)) or ""
 
@@ -399,7 +407,7 @@ end
 ----------------------------------------------------------------------------------------------------------------
 
 function UWMWizard.getSummary(invoice, farmId, numTargets)
-    local UWM = UtilitiesWasteManagement
+    local UWM = PlayerTradingPlus
     local lines = {}
     local isBuyer = invoice.buyerFarmId == farmId
 
@@ -478,7 +486,7 @@ end
 ----------------------------------------------------------------------------------------------------------------
 
 function UWMWizard:confirmListing()
-    local UWM = UtilitiesWasteManagement
+    local UWM = PlayerTradingPlus
     local invoice = self.invoice
     local isOffer = self.listingKind == UWMListing.KIND.OFFER
     local lines = {
@@ -487,6 +495,10 @@ function UWMWizard:confirmListing()
             UWM.formatMoney(invoice:getPrice(invoice.liters))),
         string.format(getText(unitKey(invoice, "uwm_summary_price")), UWM.formatMoney(invoice.pricePer1000))
     }
+    if invoice.discountPercent > 0 then
+        table.insert(lines, string.format(getText("uwm_details_discountSeller"), UWMManager.formatPercent(invoice.discountPercent),
+            UWM.formatMoney(invoice:getDiscount(invoice.liters))))
+    end
     if #self.targetPlaceables > 0 then
         table.insert(lines, string.format(getText("uwm_summary_targets"), #self.targetPlaceables))
     end
@@ -502,6 +514,7 @@ function UWMWizard:confirmListing()
             listing.fillTypeIndex = invoice.fillTypeIndex
             listing.liters = invoice.liters
             listing.pricePer1000 = invoice.pricePer1000
+            listing.discountPercent = invoice.discountPercent
             listing.isPallet = invoice.isPallet
             listing.palletSize = invoice.palletSize
             UWMRequestEvent.sendRequest(UWMManager.ACTION.POST_LISTING, {listing = listing, targetPlaceables = self.targetPlaceables})
@@ -519,7 +532,7 @@ function UWMWizard.getTradeMax(listing, farmId)
 end
 
 function UWMWizard:askTradeAmount()
-    local UWM = UtilitiesWasteManagement
+    local UWM = PlayerTradingPlus
     local listing = self.tradeListing
     local most = UWMWizard.getTradeMax(listing, self.farmId)
     local ft = listing.fillTypeIndex
@@ -554,7 +567,7 @@ function UWMWizard:askTradeAmount()
 end
 
 function UWMWizard:confirmTrade()
-    local UWM = UtilitiesWasteManagement
+    local UWM = PlayerTradingPlus
     local listing = self.tradeListing
     local ft = listing.fillTypeIndex
     local liters = self.invoice.liters

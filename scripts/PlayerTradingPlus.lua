@@ -1,17 +1,19 @@
--- Utilities & Waste Management: farms trade electricity, slurry and manure through invoices.
+-- Player Trading+: farms trade electricity, slurry and manure through invoices.
 -- Author: PropaineX
 --
 -- Startup, savegame, sync for joining players, notifications and the finance rows. The trading and depot rules
 -- are in UWMManager, the storages in UWMStock, the depot building in UWMDepot (a placeable specialization), the
 -- ESC page in gui/UWMFrame.lua.
 
-UtilitiesWasteManagement = {}
-local UWM = UtilitiesWasteManagement
+PlayerTradingPlus = {}
+local UWM = PlayerTradingPlus
 
 UWM.modName = g_currentModName
 UWM.modDirectory = g_currentModDirectory
-UWM.TAG = "[UtilitiesWasteManagement]"
-UWM.SAVE_FILENAME = "utilitiesWasteManagement.xml"
+UWM.TAG = "[PlayerTradingPlus]"
+UWM.SAVE_FILENAME = "playerTradingPlus.xml"
+-- the save file from before the rename to Player Trading+ (read once if there is no new one)
+UWM.OLD_SAVE_FILENAME = "utilitiesWasteManagement.xml"
 
 -- the traded goods, in menu order; fill types missing from the game are left out at load
 UWM.GOODS_DEFINITION = {
@@ -137,7 +139,12 @@ function UWM:loadMap(filename)
     if isServer then
         local directory = g_currentMission.missionInfo.savegameDirectory
         if directory ~= nil then
-            UWM.manager:loadFromXMLFile(directory .. "/" .. UWM.SAVE_FILENAME)
+            local filename = directory .. "/" .. UWM.SAVE_FILENAME
+            if fileExists(filename) then
+                UWM.manager:loadFromXMLFile(filename)
+            else
+                UWM.manager:loadFromXMLFile(directory .. "/" .. UWM.OLD_SAVE_FILENAME, "utilitiesWasteManagement")
+            end
         end
     end
     -- clients need it too: the load trigger asks the station whether the player's vehicle may load, and for the list
@@ -239,6 +246,7 @@ local function onLoadMission00Finished(mission)
     UWMFrame.register()
     UWMOrderDialog.register()
     UWMCoopDialog.register()
+    UWMApproveDialog.register()
 end
 
 -- the finance page asks for "finance_<stat>" without a mod environment; answer ours from this mod's texts

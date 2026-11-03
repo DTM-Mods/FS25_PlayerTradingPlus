@@ -1,4 +1,4 @@
--- Utilities & Waste Management: our GUI image sheet (gui/uwm_ui.dds, drawn by previews/ui_atlas_v1.py) and the
+-- Player Trading+: our GUI image sheet (gui/uwm_ui.dds, drawn by previews/ui_atlas_v1.py) and the
 -- UWM CO-OP theme colours. Every icon, tile and card fill on our pages is a white cell of the sheet, tinted.
 -- (A button / bitmap tinted without an image of its own drew the whole game GUI atlas: in-game test 2026-10-28.)
 -- Author: PropaineX
@@ -60,7 +60,7 @@ function UWMGui.setIcon(element, name)
     if uvs == nil then
         return
     end
-    element:setImageFilename(UtilitiesWasteManagement.modDirectory .. UWMGui.FILENAME)
+    element:setImageFilename(PlayerTradingPlus.modDirectory .. UWMGui.FILENAME)
     if element.setImageUVs ~= nil then
         element:setImageUVs(nil, unpack(uvs))
     end

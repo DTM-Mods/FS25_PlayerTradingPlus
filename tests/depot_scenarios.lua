@@ -12,8 +12,8 @@ local M
 local function reset()
     g_currentMission.placeableSystem.placeables = {}
     for _, f in pairs(farms) do f.money = 10000000 end
-    UtilitiesWasteManagement:loadMap("")
-    M = UtilitiesWasteManagement.manager
+    PlayerTradingPlus:loadMap("")
+    M = PlayerTradingPlus.manager
     removeDepots()
     newDepot(1, 0)
     M.members[2] = UWMManager.newMember(UWMManager.MEMBER.MEMBER)
@@ -109,7 +109,7 @@ M:update(0)
 check("old save: paid 12000 + offered 30000 moved to the depot", near(old.depotLiters, 12000) and near(oldOffer.depotLiters, 30000)
     and near(store:getFillLevel(FillType.LIQUIDMANURE), 8000) and not M.needsDepotMove)
 check("old save: the buyer can load the 12000 now", near(M:getCollectableLiters(2, FillType.LIQUIDMANURE), 12000))
-XMLFile.files["save/old.xml"] = {["utilitiesWasteManagement#nextId"] = 1}
+XMLFile.files["save/old.xml"] = {["playerTradingPlus#nextId"] = 1}
 loaded = UWMManager.new(true)
 loaded:loadFromXMLFile("save/old.xml")
 check("a save without the depot mark asks for the move", loaded.needsDepotMove)
@@ -121,8 +121,8 @@ local silo = add(newPlaceable(1, "spec_silo", {storages = {newStorage({[FillType
 add(newPlaceable(1, "spec_husbandry", {storage = newStorage({[FillType.GOATMILK] = 9000, [FillType.LIQUIDMANURE] = 0}, 100000)}))
 local mill = add(newPlaceable(1, "spec_productionPoint", {productionPoint = {storage = newStorage({[FillType.BARLEY] = 5000, [FillType.WHEAT] = 7000}, 100000),
     inputFillTypeIds = {[FillType.WHEAT] = true}, outputFillTypeIds = {[FillType.BARLEY] = true}}}, "Mill"))
-check("wheat is bulk, goat milk isn't, our manure keeps its own row", UtilitiesWasteManagement.getIsBulk(FillType.WHEAT)
-    and not UtilitiesWasteManagement.getIsBulk(FillType.GOATMILK) and not UtilitiesWasteManagement.getIsBulk(FillType.MANURE))
+check("wheat is bulk, goat milk isn't, our manure keeps its own row", PlayerTradingPlus.getIsBulk(FillType.WHEAT)
+    and not PlayerTradingPlus.getIsBulk(FillType.GOATMILK) and not PlayerTradingPlus.getIsBulk(FillType.MANURE))
 local goods = UWMStock.getBulkGoods(1)
 check("bulk list: barley (mill output) + wheat (silo), A - Z", #goods == 2 and goods[1].fillTypeIndex == FillType.BARLEY
     and goods[2].fillTypeIndex == FillType.WHEAT, #goods)
@@ -232,7 +232,7 @@ inv:writeStream(0)
 local copyInv = UWMInvoice.new(); copyInv:readStream(0)
 check("pallet flag and size travel to clients", copyInv.isPallet and copyInv.palletSize == inv.palletSize and #stream == 0)
 
--- the Utilities page cards (UWM CO-OP theme): texts, icon, status colour; the summary numbers
+-- the Player Trading+ page cards (UWM CO-OP theme): texts, icon, status colour; the summary numbers
 local card = UWMFrame.getInvoiceCard(inv, 2)
 check("card: honey on pallets, from farm 1, pallet icon", card.icon == "pallet" and card.title:find("on pallets", 1, true) ~= nil
     and card.sub:find("from Farm1", 1, true) ~= nil and card.sub:find("Pallet pad", 1, true) ~= nil, card.title .. " | " .. card.sub)

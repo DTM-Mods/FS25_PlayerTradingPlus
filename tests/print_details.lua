@@ -1,7 +1,7 @@
 -- prints the Details box text for two example invoices (used for the preview picture)
 local A = UWMManager.ACTION
-UtilitiesWasteManagement:loadMap("")
-local M = UtilitiesWasteManagement.manager
+PlayerTradingPlus:loadMap("")
+local M = PlayerTradingPlus.manager
 farms[1].name, farms[2].name = "Farm A", "Farm B"
 local function add(p) table.insert(g_currentMission.placeableSystem.placeables, p) return p end
 add(newPlaceable(1, "spec_productionPoint", {productionPoint = {storage = newStorage({[FillType.ELECTRICCHARGE] = 4123}), outputFillTypeIds = {[FillType.ELECTRICCHARGE] = true}, inputFillTypeIds = {}}}, "bga1"))

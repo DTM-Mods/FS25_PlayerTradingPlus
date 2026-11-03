@@ -12,8 +12,8 @@ local function reset(noDepot)
     g_currentMission.placeableSystem.placeables = {}
     for _, f in pairs(farms) do f.money = 10000 end
     notifications = {}
-    UtilitiesWasteManagement:loadMap("")
-    M = UtilitiesWasteManagement.manager
+    PlayerTradingPlus:loadMap("")
+    M = PlayerTradingPlus.manager
     removeDepots()
     depot = nil
     if not noDepot then
@@ -160,9 +160,9 @@ M:writeStream(0)
 local copy = UWMManager.new(false)
 copy:readStream(0)
 check("stream round trip", #copy.invoices == before and copy.invoices[1].targets[1] == bakery.uid and copy.invoices[2].reserve and #stream == 0)
-M:saveToXMLFile("save/utilitiesWasteManagement.xml")
+M:saveToXMLFile("save/playerTradingPlus.xml")
 local loaded = UWMManager.new(true)
-loaded:loadFromXMLFile("save/utilitiesWasteManagement.xml")
+loaded:loadFromXMLFile("save/playerTradingPlus.xml")
 local a, b = M.invoices[1], loaded.invoices[1]
 check("save/load round trip", #loaded.invoices == before and b.fillTypeIndex == a.fillTypeIndex and b.targets[1] == a.targets[1]
     and near(b.pricePer1000, 7) and loaded.invoices[2].reserve and loaded.nextId == M.nextId)
@@ -299,7 +299,7 @@ reset(true)
 pit = add(newPlaceable(1, "spec_husbandry", {storage = newStorage({[FillType.MANURE] = 5000})}))
 ok, key = order(20, 1, 2, FillType.MANURE, UWMInvoice.AMOUNT.FIXED, 1000, 10)
 check("no depot: order refused", not ok and key == "uwm_error_noDepot" and #M.invoices == 0, key)
-check("no depot: the Utilities tab is hidden", UWMFrame.getIsPageEnabled() == false)
+check("no depot: the Player Trading+ tab is hidden", UWMFrame.getIsPageEnabled() == false)
 check("no depot: header says so", UWMFrame.getDepotStatusText(2) == UWM_TEXTS.uwm_depot_none, UWMFrame.getDepotStatusText(2))
 depot = newDepot(1, 0)
 check("depot built: the tab shows", UWMFrame.getIsPageEnabled() == true)
@@ -517,6 +517,20 @@ check("a finished offer takes no more deals", not ok and key == "uwm_error_listi
 local station = newDepotStation(depot)
 got = station:addFillLevelToFillableObject(newTanker(3, 30000), 1, FillType.LIQUIDMANURE, 30000, nil, ToolType.TRIGGER)
 check("buyer collects at the depot; the barn isn't touched", near(got, 30000) and near(barn.spec_husbandry.storage:getFillLevel(FillType.LIQUIDMANURE), 200000))
+-- the seller's discount on a sell order: every deal is paid at the price less the discount
+local dl = UWMListing.new()
+dl.kind, dl.fillTypeIndex, dl.liters, dl.pricePer1000, dl.discountPercent = UWMListing.KIND.WANTED, FillType.LIQUIDMANURE, 1000, 1, 10
+ok, key = M:handleRequest(A.POST_LISTING, 20, {listing = dl})
+check("discount: a buy order can't have one", not ok and key == "uwm_error_badDiscount", key)
+dl.kind = UWMListing.KIND.OFFER
+ok, key = M:handleRequest(A.POST_LISTING, 10, {listing = dl, targets = nil})
+local dOffer = lastListing()
+check("discount: sell order posted with 10 %", ok and dOffer.discountPercent == 10, key)
+local before1, before3 = farms[1].money, farms[3].money
+ok, key = M:handleRequest(A.TRADE_LISTING, 30, {listingId = dOffer.id, liters = 1000})
+inv = last()
+check("discount: buyer pays 0.90 for 1,000 l, the deal invoice carries the 10 %", ok and inv.discountPercent == 10
+    and near(farms[3].money, before3 - 0.9) and near(farms[1].money, before1 + 0.9), key)
 
 -- 24. withdrawing an offer frees the held stock; paid deals stay
 reset()
@@ -644,6 +658,11 @@ row = UWMFrame.getOrderRow(wanted)
 check("my order row: SO number, wanted, status open", row[1] == "SO-002" and row[2] == "Wanted" and row[8] == "Open", table.concat(row, " | "))
 row = UWMFrame.getOpenDealRow(deal, 1)
 check("open deal row for the seller: the buyer collects", row[1] == "Farm2" and row[5] == "50000 (buyer)", table.concat(row, " | "))
+local card = UWMFrame.getListingCard(offer, 2)
+check("market card: for sale pill, farm in the line, price as amount", card.status == "For sale" and card.statusColor == "greenLight"
+    and card.sub:find("Farm1", 1, true) ~= nil and card.amount == "10 / 1,000 l" and card.title:find("350000 of 400000 left", 1, true) ~= nil, card.title .. " | " .. card.sub)
+card = UWMFrame.getListingCard(wanted, wanted.farmId)
+check("my order card: open, deals in the line", card.status == "Open" and card.sub:find("SO-002", 1, true) ~= nil and card.sub:find("deals", 1, true) ~= nil, card.sub)
 local function acts(item, farmId, manager) local a, b = UWMFrame.getActions(item, farmId, manager ~= false) return (a or "") .. "," .. (b or "") end
 check("incoming bill: Accept and pay / Decline", acts(bill, 2) == "uwm_button_acceptPay,uwm_button_decline", acts(bill, 2))
 check("incoming order: Accept / Decline", acts(pendingOrder, 1) == "uwm_button_accept,uwm_button_decline")

@@ -1,4 +1,4 @@
--- Utilities & Waste Management: all invoices, the depot membership, and everything that changes them. Changes run
+-- Player Trading+: all invoices, the depot membership, and everything that changes them. Changes run
 -- on the server only; clients get a copy through UWMSyncEvent.
 -- Depot rules (user's, 2026-10-23): no depot on the map = no invoices at all. Every farm that doesn't own a depot
 -- gets a membership offer (answered by its farm manager); members and depot owners share the depots' upkeep
@@ -207,7 +207,7 @@ UWMManager.DISCOUNT_NOTICES = {uwm_notify_newBill = true, uwm_notify_newOrder = 
 
 -- "10 % off" (+ ", -$33" when the money is known)
 function UWMManager.getDiscountText(invoice, money)
-    local UWM = UtilitiesWasteManagement
+    local UWM = PlayerTradingPlus
     local percent = string.format(UWM.getText("uwm_discount_percent"), UWMManager.formatPercent(invoice.discountPercent))
     if money ~= nil and money > 0 then
         return percent .. string.format(UWM.getText("uwm_discount_money"), UWM.formatMoney(money))
@@ -238,7 +238,7 @@ end
 
 -- "4,123 kWh delivered, $1,443 paid, $0 refunded" for the whole invoice so far
 function UWMManager.getReceiptLine(invoice)
-    local UWM = UtilitiesWasteManagement
+    local UWM = PlayerTradingPlus
     local line = string.format(UWM.getText("uwm_receipt_line"), UWM.formatAmount(invoice.fillTypeIndex, invoice.totalLiters),
         UWM.formatMoney(invoice.totalMoney), UWM.formatMoney(invoice.totalRefund))
     if invoice.discountPercent > 0 then
@@ -505,7 +505,7 @@ end
 -- returns ok, l10n key of the result for the player who asked
 function UWMManager:handleRequest(action, userId, data)
     local ok, key = self:runRequest(action, userId, data)
-    print(string.format("%s request %s by user %s (invoice %s, %d target(s)): %s %s", UtilitiesWasteManagement.TAG,
+    print(string.format("%s request %s by user %s (invoice %s, %d target(s)): %s %s", PlayerTradingPlus.TAG,
         tostring(action), tostring(userId), tostring(data.invoiceId or (data.invoice ~= nil and "new") or "-"),
         data.targets ~= nil and #data.targets or 0, ok and "OK" or "REFUSED", tostring(key)))
     return ok, key
@@ -570,7 +570,7 @@ function UWMManager:runRequest(action, userId, data)
     end
 
     if action == UWMManager.ACTION.ACCEPT then
-        return self:acceptInvoice(farmId, invoice, data.reserve, data.targets)
+        return self:acceptInvoice(farmId, invoice, data.reserve, data.targets, data.discountPercent)
     elseif action == UWMManager.ACTION.DECLINE then
         return self:declineInvoice(farmId, invoice)
     elseif action == UWMManager.ACTION.CANCEL then
@@ -583,7 +583,7 @@ function UWMManager:runRequest(action, userId, data)
 end
 
 function UWMManager:createInvoice(farmId, data, targets)
-    if data == nil or not UtilitiesWasteManagement.getIsTradable(data.fillTypeIndex) then
+    if data == nil or not PlayerTradingPlus.getIsTradable(data.fillTypeIndex) then
         return false, "uwm_error_badGood"
     end
 
@@ -598,8 +598,9 @@ function UWMManager:createInvoice(farmId, data, targets)
     if not (data.pricePer1000 >= 0) then
         return false, "uwm_error_badPrice"
     end
+    -- the seller's discount: on a bill now, on a request when the seller approves it
     local discount = data.discountPercent or 0
-    if not (discount >= 0 and discount < 100) then
+    if not (discount >= 0 and discount < 100) or (discount > 0 and not isBill) then
         return false, "uwm_error_badDiscount"
     end
     if data.isPallet and not UWMPallets.getIsPalletGood(data.fillTypeIndex) then
@@ -651,12 +652,16 @@ function UWMManager:createInvoice(farmId, data, targets)
     return true, isBill and "uwm_result_billSent" or "uwm_result_orderSent"
 end
 
-function UWMManager:acceptInvoice(farmId, invoice, reserve, targets)
+function UWMManager:acceptInvoice(farmId, invoice, reserve, targets, discount)
     if invoice.state ~= STATE.PENDING then
         return false, "uwm_error_notPending"
     end
     if farmId == invoice.creatorFarmId then
         return false, "uwm_error_ownInvoice"
+    end
+    -- the seller approving a request sets the discount (nil = keep what the invoice has)
+    if discount ~= nil and farmId == invoice.sellerFarmId and not (discount >= 0 and discount < 100) then
+        return false, "uwm_error_badDiscount"
     end
     local canTrade, tradeKey = self:getCanTrade(farmId, invoice:getOtherFarmId(farmId))
     if not canTrade then
@@ -664,7 +669,10 @@ function UWMManager:acceptInvoice(farmId, invoice, reserve, targets)
     end
 
     -- the buyer's choices only stick when the accept goes through
-    local oldReserve, oldTargets = invoice.reserve, invoice.targets
+    local oldReserve, oldTargets, oldDiscount = invoice.reserve, invoice.targets, invoice.discountPercent
+    if discount ~= nil and farmId == invoice.sellerFarmId then
+        invoice.discountPercent = discount
+    end
     if farmId == invoice.buyerFarmId then
         invoice.reserve = reserve == true and not invoice:getIsElectricity()
         if targets ~= nil then
@@ -679,7 +687,7 @@ function UWMManager:acceptInvoice(farmId, invoice, reserve, targets)
         ok, key = self:runPeriod(invoice)
     end
     if not ok then
-        invoice.reserve, invoice.targets = oldReserve, oldTargets
+        invoice.reserve, invoice.targets, invoice.discountPercent = oldReserve, oldTargets, oldDiscount
         return false, key
     end
 
@@ -873,7 +881,7 @@ end
 
 -- "50,000 l for $500"
 local function getDealText(fillTypeIndex, liters, money)
-    local UWM = UtilitiesWasteManagement
+    local UWM = PlayerTradingPlus
     return string.format(UWM.getText("uwm_receipt_deal"), UWM.formatAmount(fillTypeIndex, liters), UWM.formatMoney(money))
 end
 
@@ -888,7 +896,7 @@ end
 
 -- data: UWMListing with kind, fillTypeIndex, liters, pricePer1000; targets: WANTED electricity, the poster's productions
 function UWMManager:postListing(farmId, data, targets)
-    if data == nil or not UtilitiesWasteManagement.getIsTradable(data.fillTypeIndex) then
+    if data == nil or not PlayerTradingPlus.getIsTradable(data.fillTypeIndex) then
         return false, "uwm_error_badGood"
     end
     if data.kind ~= UWMListing.KIND.OFFER and data.kind ~= UWMListing.KIND.WANTED then
@@ -899,6 +907,11 @@ function UWMManager:postListing(farmId, data, targets)
     end
     if not (data.pricePer1000 >= 0) then
         return false, "uwm_error_badPrice"
+    end
+    -- the seller's discount: sell orders only
+    local discount = data.discountPercent or 0
+    if not (discount >= 0 and discount < 100) or (discount > 0 and data.kind ~= UWMListing.KIND.OFFER) then
+        return false, "uwm_error_badDiscount"
     end
     local canTrade, tradeKey = self:getCanTrade(farmId, nil)
     if not canTrade then
@@ -913,6 +926,7 @@ function UWMManager:postListing(farmId, data, targets)
     listing.liters = data.liters
     listing.remaining = data.liters
     listing.pricePer1000 = data.pricePer1000
+    listing.discountPercent = discount
     listing.createdDay = g_currentMission.environment.currentMonotonicDay
     listing.isPallet = data.isPallet == true
     listing.palletSize = UWMManager.getPalletSize(data.palletSize)
@@ -954,7 +968,7 @@ function UWMManager:postListing(farmId, data, targets)
     self:addListing(listing)
 
     local key = listing:getIsOffer() and "uwm_notify_listingOffer" or "uwm_notify_listingWanted"
-    local UWM = UtilitiesWasteManagement
+    local UWM = PlayerTradingPlus
     local detail = string.format(UWM.getText(listing:getIsElectricity() and "uwm_receipt_atPriceKWh" or "uwm_receipt_atPrice"),
         UWM.formatAmount(listing.fillTypeIndex, listing.liters), UWM.formatMoney(listing.pricePer1000))
     for _, farm in pairs(g_farmManager:getFarms()) do
@@ -999,6 +1013,7 @@ function UWMManager:tradeListing(farmId, listing, liters, targets)
     invoice.amountMode = UWMInvoice.AMOUNT.FIXED
     invoice.liters = liters
     invoice.pricePer1000 = listing.pricePer1000
+    invoice.discountPercent = listing.discountPercent
     invoice.repeatDays = UWMInvoice.REPEAT_ONCE
     invoice.createdDay = g_currentMission.environment.currentMonotonicDay
     invoice.reserve = not invoice:getIsElectricity()
@@ -1175,7 +1190,7 @@ function UWMManager:onDayChanged()
                 ok, key, liters, money = self:runPeriod(invoice)
             end
             if ok then
-                local UWM = UtilitiesWasteManagement
+                local UWM = PlayerTradingPlus
                 local periodKey = invoice:getIsElectricity() and "uwm_receipt_periodDelivered" or "uwm_receipt_periodPaid"
                 local line = string.format(UWM.getText(periodKey), UWM.formatAmount(invoice.fillTypeIndex, liters), UWM.formatMoney(money))
                 if invoice.discountPercent > 0 then
@@ -1354,7 +1369,7 @@ function UWMManager:updateMemberships()
             if UWMManager.getIsTradingFarm(farmId) and self.members[farmId] == nil and not self:getOwnsDepot(farmId) then
                 self.members[farmId] = UWMManager.newMember(UWMManager.MEMBER.OFFERED)
                 changed = true
-                self:notifyDepot(farmId, "uwm_notify_depotOffer", UtilitiesWasteManagement.formatMoney(self:getDailyShare(farmId)))
+                self:notifyDepot(farmId, "uwm_notify_depotOffer", PlayerTradingPlus.formatMoney(self:getDailyShare(farmId)))
             end
         end
     end
@@ -1405,7 +1420,7 @@ function UWMManager:requestMembership(farmId)
     member = member or UWMManager.newMember(UWMManager.MEMBER.OFFERED)
     member.state = UWMManager.MEMBER.OFFERED
     self.members[farmId] = member
-    self:notifyDepot(farmId, "uwm_notify_depotOffer", UtilitiesWasteManagement.formatMoney(self:getDailyShare(farmId)))
+    self:notifyDepot(farmId, "uwm_notify_depotOffer", PlayerTradingPlus.formatMoney(self:getDailyShare(farmId)))
     self:setDirty()
     return true, "uwm_result_requested"
 end
@@ -1435,7 +1450,7 @@ function UWMManager:leaveMembership(farmId)
         if total > 0 then
             self:payDepotOwners(farmId, member.arrears, owners, total)
         end
-        self:notifyDepot(farmId, "uwm_notify_depotDebtTaken", UtilitiesWasteManagement.formatMoney(member.arrears))
+        self:notifyDepot(farmId, "uwm_notify_depotDebtTaken", PlayerTradingPlus.formatMoney(member.arrears))
     end
     member.arrears = 0
     member.missedMonths = 0
@@ -1484,7 +1499,7 @@ function UWMManager:chargeDepotShares()
                 self:payDepotOwners(farmId, share, owners, total)
             else
                 member.arrears = member.arrears + share
-                self:notifyDepot(farmId, "uwm_notify_depotUnpaid", UtilitiesWasteManagement.formatMoney(member.arrears))
+                self:notifyDepot(farmId, "uwm_notify_depotUnpaid", PlayerTradingPlus.formatMoney(member.arrears))
                 self:setDirty()
             end
         end
@@ -1505,7 +1520,7 @@ function UWMManager:onPeriodChanged()
         if member.state == UWMManager.MEMBER.MEMBER then
             if member.arrears >= 0.5 then
                 member.missedMonths = member.missedMonths + 1
-                local owed = UtilitiesWasteManagement.formatMoney(member.arrears)
+                local owed = PlayerTradingPlus.formatMoney(member.arrears)
                 if member.missedMonths >= 2 and not member.suspended then
                     member.suspended = true
                     self:notifyDepot(farmId, "uwm_notify_depotSuspended", owed)
@@ -1650,16 +1665,16 @@ end
 ----------------------------------------------------------------------------------------------------------------
 
 function UWMManager:saveToXMLFile(filename)
-    local xmlFile = XMLFile.create("uwmSave", filename, "utilitiesWasteManagement")
+    local xmlFile = XMLFile.create("uwmSave", filename, "playerTradingPlus")
     if xmlFile == nil then
-        Logging.warning("%s could not write %s", UtilitiesWasteManagement.TAG, filename)
+        Logging.warning("%s could not write %s", PlayerTradingPlus.TAG, filename)
         return
     end
     self:pruneHistory()
-    xmlFile:setInt("utilitiesWasteManagement#nextId", self.nextId)
-    xmlFile:setInt("utilitiesWasteManagement#depotStock", 1)
+    xmlFile:setInt("playerTradingPlus#nextId", self.nextId)
+    xmlFile:setInt("playerTradingPlus#depotStock", 1)
     for i, entry in ipairs(self.depotReturns) do
-        local key = string.format("utilitiesWasteManagement.depotReturns.return(%d)", i - 1)
+        local key = string.format("playerTradingPlus.depotReturns.return(%d)", i - 1)
         xmlFile:setInt(key .. "#farmId", entry.farmId)
         xmlFile:setString(key .. "#fillType", g_fillTypeManager:getFillTypeNameByIndex(entry.fillTypeIndex))
         xmlFile:setFloat(key .. "#liters", entry.liters)
@@ -1667,12 +1682,12 @@ function UWMManager:saveToXMLFile(filename)
         xmlFile:setInt(key .. "#palletSize", entry.palletSize or 1000)
     end
     for i, invoice in ipairs(self.invoices) do
-        invoice:saveToXMLFile(xmlFile, string.format("utilitiesWasteManagement.invoices.invoice(%d)", i - 1))
+        invoice:saveToXMLFile(xmlFile, string.format("playerTradingPlus.invoices.invoice(%d)", i - 1))
     end
-    xmlFile:setBool("utilitiesWasteManagement.depot#allowMultiple", self.allowMultipleDepots)
+    xmlFile:setBool("playerTradingPlus.depot#allowMultiple", self.allowMultipleDepots)
     for i, farmId in ipairs(self:getMemberFarmIds()) do
         local member = self.members[farmId]
-        local key = string.format("utilitiesWasteManagement.depot.member(%d)", i - 1)
+        local key = string.format("playerTradingPlus.depot.member(%d)", i - 1)
         xmlFile:setInt(key .. "#farmId", farmId)
         xmlFile:setInt(key .. "#state", member.state)
         xmlFile:setFloat(key .. "#arrears", member.arrears)
@@ -1680,30 +1695,32 @@ function UWMManager:saveToXMLFile(filename)
         xmlFile:setBool(key .. "#suspended", member.suspended)
         xmlFile:setInt(key .. "#rejoinWait", member.rejoinWait)
     end
-    xmlFile:setInt("utilitiesWasteManagement.listings#nextId", self.nextListingId)
+    xmlFile:setInt("playerTradingPlus.listings#nextId", self.nextListingId)
     for i, listing in ipairs(self.listings) do
-        listing:saveToXMLFile(xmlFile, string.format("utilitiesWasteManagement.listings.listing(%d)", i - 1))
+        listing:saveToXMLFile(xmlFile, string.format("playerTradingPlus.listings.listing(%d)", i - 1))
     end
     xmlFile:save()
     xmlFile:delete()
 end
 
-function UWMManager:loadFromXMLFile(filename)
+-- root: the file's root element (old saves from Utilities & Waste Management use "utilitiesWasteManagement")
+function UWMManager:loadFromXMLFile(filename, root)
+    root = root or "playerTradingPlus"
     local xmlFile = XMLFile.loadIfExists("uwmSave", filename)
     if xmlFile == nil then
         return
     end
-    xmlFile:iterate("utilitiesWasteManagement.invoices.invoice", function(_, key)
+    xmlFile:iterate(root .. ".invoices.invoice", function(_, key)
         local invoice = UWMInvoice.new()
         if invoice:loadFromXMLFile(xmlFile, key) then
             self:addInvoice(invoice)
         else
-            Logging.warning("%s skipped invoice %s (unknown fill type or id)", UtilitiesWasteManagement.TAG, key)
+            Logging.warning("%s skipped invoice %s (unknown fill type or id)", PlayerTradingPlus.TAG, key)
         end
     end)
-    self.nextId = math.max(self.nextId, xmlFile:getInt("utilitiesWasteManagement#nextId", 1))
-    self.allowMultipleDepots = xmlFile:getBool("utilitiesWasteManagement.depot#allowMultiple", false)
-    xmlFile:iterate("utilitiesWasteManagement.depot.member", function(_, key)
+    self.nextId = math.max(self.nextId, xmlFile:getInt(root .. "#nextId", 1))
+    self.allowMultipleDepots = xmlFile:getBool(root .. ".depot#allowMultiple", false)
+    xmlFile:iterate(root .. ".depot.member", function(_, key)
         local farmId = xmlFile:getInt(key .. "#farmId", 0)
         local member = UWMManager.newMember(xmlFile:getInt(key .. "#state", UWMManager.MEMBER.OFFERED))
         member.arrears = xmlFile:getFloat(key .. "#arrears", 0)
@@ -1714,16 +1731,16 @@ function UWMManager:loadFromXMLFile(filename)
             self.members[farmId] = member
         end
     end)
-    xmlFile:iterate("utilitiesWasteManagement.listings.listing", function(_, key)
+    xmlFile:iterate(root .. ".listings.listing", function(_, key)
         local listing = UWMListing.new()
         if listing:loadFromXMLFile(xmlFile, key) then
             self:addListing(listing)
         else
-            Logging.warning("%s skipped standing order %s (unknown fill type or id)", UtilitiesWasteManagement.TAG, key)
+            Logging.warning("%s skipped standing order %s (unknown fill type or id)", PlayerTradingPlus.TAG, key)
         end
     end)
-    self.nextListingId = math.max(self.nextListingId, xmlFile:getInt("utilitiesWasteManagement.listings#nextId", 1))
-    xmlFile:iterate("utilitiesWasteManagement.depotReturns.return", function(_, key)
+    self.nextListingId = math.max(self.nextListingId, xmlFile:getInt(root .. ".listings#nextId", 1))
+    xmlFile:iterate(root .. ".depotReturns.return", function(_, key)
         local fillTypeIndex = g_fillTypeManager:getFillTypeIndexByName(xmlFile:getString(key .. "#fillType", ""))
         local liters = xmlFile:getFloat(key .. "#liters", 0)
         if fillTypeIndex ~= nil and liters > 0 then
@@ -1733,7 +1750,7 @@ function UWMManager:loadFromXMLFile(filename)
         end
     end)
     -- saved before goods moved into the depot: move them once the farms' storages are loaded (first update)
-    self.needsDepotMove = xmlFile:getInt("utilitiesWasteManagement#depotStock", 0) < 1
+    self.needsDepotMove = xmlFile:getInt(root .. "#depotStock", 0) < 1
     xmlFile:delete()
-    print(string.format("%s loaded %d invoice(s), %d standing order(s)", UtilitiesWasteManagement.TAG, #self.invoices, #self.listings))
+    print(string.format("%s loaded %d invoice(s), %d standing order(s)", PlayerTradingPlus.TAG, #self.invoices, #self.listings))
 end

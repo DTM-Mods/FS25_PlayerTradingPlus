@@ -1,4 +1,4 @@
--- fake game for headless tests of the Utilities & Waste Management scripts
+-- fake game for headless tests of the Player Trading+ scripts
 function Class(members, baseClass)
     members = members or {}
     local mt = {__index = members}
@@ -33,7 +33,7 @@ FSBaseMission = {sendInitialClientState = function() end, INGAME_NOTIFICATION_IN
 Mission00 = {loadMission00Finished = function() end}
 I18N = {getText = function(_, t) return t end}
 function addModEventListener() end
-g_currentModName = "FS25_UtilitiesWasteManagement"
+g_currentModName = "FS25_PlayerTradingPlus"
 g_currentModDirectory = ""
 -- the ESC page: only its text builders are tested (gui/UWMFrame.lua is loaded after the scripts)
 TabbedMenuFrameElement = {new = function() return {} end}

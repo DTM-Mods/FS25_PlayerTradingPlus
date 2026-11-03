@@ -8,3 +8,9 @@ previews/details_preview_v1.png
 
 # Python bytecode
 __pycache__/
+
+# local logs and the server upload helper (server login) stay local
+debug.log
+previews/depot_editor_pid.txt
+previews/depot_export_layout.log
+previews/upload_testing.py

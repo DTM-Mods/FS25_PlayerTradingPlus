@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="utf-8" standalone="no" ?>
 <modDesc descVersion="113">
     <author>PropaineX</author>
-    <version>0.9.1.0</version>
+    <version>0.12.0.0</version>
     <title>
-        <en>Utilities &amp; Waste Management Pro Edition</en>
+        <en>Player Trading+ Pro Edition</en>
     </title>
     <description>
         <en><![CDATA[Farms trade electricity, slurry and manure with each other through invoices.
 
-Open the Utilities page in the ESC menu. The farm manager can send a bill (to sell) or an order (to buy) to another farm; that farm's manager accepts or declines it. Set the amount, or take everything the seller has in stock, and set your own price per 1,000 liters (the game's price is shown as a guide). Trade once, or every day or every week until either farm ends it.
+Open the Player Trading+ page in the ESC menu. The farm manager can send a bill (to sell) or an order (to buy) to another farm; that farm's manager accepts or declines it. Set the amount, or take everything the seller has in stock, and set your own price per 1,000 liters (the game's price is shown as a guide). Trade once, or every day or every week until either farm ends it.
 
-Everything runs through the Community Depot (shop: Production, Selling points, $268,000). Without a depot on the map there are no invoices. One depot per map; the server admin can allow more on the Utilities page.
+Everything runs through the Community Depot (shop: Production, Selling points, $268,000). Without a depot on the map there are no invoices. One depot per map; the server admin can allow more on the Player Trading+ page.
 
 Every other farm is offered membership of the depot. Members and the owner share the depot's upkeep equally; it is taken every day. A member who can't pay builds up a debt; two months in a row ending in debt and the farm is suspended until it pays. A member can leave, but can't rejoin for 6 months; any debt is taken from its account when it leaves, even into the red. Farms that said no or are suspended can't send or accept invoices. Invoices they already paid can still be collected or ended.
 
-Electricity goes straight from the seller's power-producing productions into the buyer's productions the buyer picked, and is paid for as it arrives. Slurry and manure are paid for up front and collected by anyone on the buying farm at the depot: slurry at the tank's coupling, manure at the open end of the manure pit. Only what you paid for is offered, and the liters come out of the seller's own stock. Buyers can reserve what they paid for, so the seller can't use it. Liters that are never collected are refunded when the invoice ends. The depot office door opens the Utilities page.
+Electricity goes straight from the seller's power-producing productions into the buyer's productions the buyer picked, and is paid for as it arrives. Slurry and manure are paid for up front and collected by anyone on the buying farm at the depot: slurry at the tank's coupling, manure at the open end of the manure pit. Only what you paid for is offered, and the liters come out of the seller's own stock. Buyers can reserve what they paid for, so the seller can't use it. Liters that are never collected are refunded when the invoice ends. The depot office door opens the Player Trading+ page.
 
 Multiplayer: everything runs on the server and only farm managers can trade.]]></en>
     </description>
-    <iconFilename>icon_UtilitiesWasteManagement.dds</iconFilename>
+    <iconFilename>icon_PlayerTradingPlus.dds</iconFilename>
     <multiplayer supported="true" />
 
     <placeableSpecializations>
@@ -47,13 +47,14 @@ Multiplayer: everything runs on the server and only farm managers can trade.]]><
         <sourceFile filename="scripts/gui/UWMWizard.lua" />
         <sourceFile filename="scripts/gui/UWMOrderDialog.lua" />
         <sourceFile filename="scripts/gui/UWMCoopDialog.lua" />
+        <sourceFile filename="scripts/gui/UWMApproveDialog.lua" />
         <sourceFile filename="scripts/gui/UWMFrame.lua" />
-        <sourceFile filename="scripts/UtilitiesWasteManagement.lua" />
+        <sourceFile filename="scripts/PlayerTradingPlus.lua" />
     </extraSourceFiles>
 
     <l10n>
         <!-- page -->
-        <text name="uwm_menuTitle"><en>Utilities &amp; Waste Management</en></text>
+        <text name="uwm_menuTitle"><en>Player Trading+</en></text>
         <text name="uwm_managerYes"><en>You are the farm manager: you can trade</en></text>
         <text name="uwm_managerNo"><en>Only the farm manager can trade</en></text>
         <text name="uwm_column_farm"><en>Farm</en></text>
@@ -90,10 +91,10 @@ Multiplayer: everything runs on the server and only farm managers can trade.]]><
         <text name="uwm_good_manure"><en>Manure</en></text>
 
         <!-- finance page -->
-        <text name="uwm_finance_income"><en>Utility sales</en></text>
-        <text name="uwm_finance_expense"><en>Utility purchases</en></text>
-        <text name="finance_uwmIncome"><en>Utility sales</en></text>
-        <text name="finance_uwmExpense"><en>Utility purchases</en></text>
+        <text name="uwm_finance_income"><en>Player trade sales</en></text>
+        <text name="uwm_finance_expense"><en>Player trade purchases</en></text>
+        <text name="finance_uwmIncome"><en>Player trade sales</en></text>
+        <text name="finance_uwmExpense"><en>Player trade purchases</en></text>
         <text name="uwm_finance_depotIncome"><en>Depot upkeep shares</en></text>
         <text name="uwm_finance_depotExpense"><en>Depot upkeep share</en></text>
         <text name="finance_uwmDepotIncome"><en>Depot upkeep shares</en></text>
@@ -101,8 +102,8 @@ Multiplayer: everything runs on the server and only farm managers can trade.]]><
 
         <!-- the depot building -->
         <text name="uwm_depot_name"><en>Community Depot</en></text>
-        <text name="uwm_depot_function"><en>Pickup point for slurry and manure bought by invoice. Needed for all Utilities invoices.</en></text>
-        <text name="uwm_action_openDepot"><en>Open the Utilities page</en></text>
+        <text name="uwm_depot_function"><en>Pickup point for slurry and manure bought by invoice. Needed for all Player Trading+ invoices.</en></text>
+        <text name="uwm_action_openDepot"><en>Open the Player Trading+ page</en></text>
         <text name="uwm_warning_oneDepot"><en>Only one depot is allowed on this map.</en></text>
 
         <!-- depot status (page header) and the Depot button -->
@@ -126,7 +127,7 @@ Multiplayer: everything runs on the server and only farm managers can trade.]]><
         <text name="uwm_depot_optionOneOnly"><en>Server: allow only one depot on the map</en></text>
 
         <!-- new invoice -->
-        <text name="uwm_wizard_title"><en>Utilities invoice</en></text>
+        <text name="uwm_wizard_title"><en>Player Trading+ invoice</en></text>
         <text name="uwm_wizard_side"><en>Do you want to sell or buy?</en></text>
         <text name="uwm_wizard_sideSell"><en>Sell (send a bill)</en></text>
         <text name="uwm_wizard_sideBuy"><en>Buy (send an order)</en></text>
@@ -226,7 +227,7 @@ Multiplayer: everything runs on the server and only farm managers can trade.]]><
         <text name="uwm_notify_contractFailed"><en>Contract with %s: %s could not be traded this period.</en></text>
 
         <!-- depot messages: first %s = the depot owner farm(s), second %s = an amount or a farm -->
-        <text name="uwm_notify_depotOffer"><en>%s's depot: join it to trade by invoice? Your share would be %s a day. Answer on the Utilities page.</en></text>
+        <text name="uwm_notify_depotOffer"><en>%s's depot: join it to trade by invoice? Your share would be %s a day. Answer on the Player Trading+ page.</en></text>
         <text name="uwm_notify_depotJoined"><en>Depot (%s): %s joined.</en></text>
         <text name="uwm_notify_depotLeft"><en>Depot (%s): %s left.</en></text>
         <text name="uwm_notify_depotDebtTaken"><en>Depot (%s): your farm left, so the %s it owed was taken from its account.</en></text>
@@ -362,7 +363,7 @@ Multiplayer: everything runs on the server and only farm managers can trade.]]><
 
         <!-- UWM CO-OP dialog and form -->
         <text name="uwm_button_cancel"><en>Cancel</en></text>
-        <text name="uwm_coop_title"><en>UWM Co-op</en></text>
+        <text name="uwm_coop_title"><en>PT+ Co-op</en></text>
         <text name="uwm_coop_question"><en>What's on the books today?</en></text>
         <text name="uwm_coop_bill"><en>Invoice a farm</en></text>
         <text name="uwm_coop_billHint"><en>Bill a farm for what you sell: slurry, manure, electricity, bulk goods or pallets. Your goods go to the depot and wait there until the farm pays and picks them up.</en></text>
@@ -386,7 +387,7 @@ Multiplayer: everything runs on the server and only farm managers can trade.]]><
         <text name="uwm_form_anyFarm"><en>Any farm</en></text>
         <text name="uwm_form_goods"><en>Goods</en></text>
         <text name="uwm_form_pickup"><en>Pickup</en></text>
-        <text name="uwm_form_depot"><en>Utilities Depot</en></text>
+        <text name="uwm_form_depot"><en>Player Trading+ Depot</en></text>
         <text name="uwm_form_fixed"><en>Fixed</en></text>
         <text name="uwm_form_owner"><en>Owner</en></text>
         <text name="uwm_form_community"><en>Community</en></text>
@@ -404,11 +405,28 @@ Multiplayer: everything runs on the server and only farm managers can trade.]]><
         <text name="uwm_sum_collectSub"><en>to collect</en></text>
         <text name="uwm_sum_forSaleSub"><en>at the depot</en></text>
         <text name="uwm_tab_count"><en>%s  %d</en></text>
+        <text name="uwm_card_left"><en>%s of %s left</en></text>
+        <text name="uwm_card_deals"><en>%d deals</en></text>
+        <text name="uwm_section_market"><en>On the market</en></text>
+        <text name="uwm_button_clearFinished"><en>Delete finished invoices</en></text>
+        <text name="uwm_button_clearFinishedKey"><en>Delete finished</en></text>
         <text name="uwm_form_issuerLabel"><en>Issuer</en></text>
         <text name="uwm_form_palletSizeLabel"><en>Pallet size</en></text>
         <text name="uwm_form_palletSizes"><en>1,000 / 5,000</en></text>
         <text name="uwm_form_lineTitle"><en>Invoice line</en></text>
         <text name="uwm_form_offPill"><en>%s %% off</en></text>
+        <text name="uwm_form_sellerSetsDiscount"><en>Seller sets it</en></text>
+        <text name="uwm_approve_title"><en>Approve a request</en></text>
+        <text name="uwm_approve_from"><en>From %s</en></text>
+        <text name="uwm_approve_goods"><en>%s  -  %s, %s</en></text>
+        <text name="uwm_approve_pickup"><en>Pickup: %s</en></text>
+        <text name="uwm_approve_hint"><en>Optional. Leave empty for the full price.</en></text>
+        <text name="uwm_approve_subtotal"><en>%s at %s</en></text>
+        <text name="uwm_approve_discount"><en>Your discount %s %%</en></text>
+        <text name="uwm_approve_pays"><en>%s pays you</en></text>
+        <text name="uwm_approve_note"><en>%s is told the request was approved, with "%s %% off".</en></text>
+        <text name="uwm_approve_button"><en>Approve</en></text>
+        <text name="uwm_button_back"><en>Back</en></text>
         <text name="uwm_form_point"><en>Pickup point</en></text>
         <text name="uwm_form_pointSlurry"><en>Slurry lane (tank)</en></text>
         <text name="uwm_form_pointManure"><en>Manure pit entrance</en></text>

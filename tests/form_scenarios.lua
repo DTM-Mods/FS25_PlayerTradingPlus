@@ -12,13 +12,13 @@ local function lastDialog() return dialogLog[#dialogLog] end
 -- farm 1 (manager user 10) is the local player, owns the depot; farms 2 and 3 are members
 g_currentMission.placeableSystem.placeables = {}
 for _, f in pairs(farms) do f.money = 10000 end
-UtilitiesWasteManagement:loadMap("")
-local M = UtilitiesWasteManagement.manager
+PlayerTradingPlus:loadMap("")
+local M = PlayerTradingPlus.manager
 removeDepots()
 newDepot(1, 0)
 M.members[2] = UWMManager.newMember(UWMManager.MEMBER.MEMBER)
 M.members[3] = UWMManager.newMember(UWMManager.MEMBER.MEMBER)
-UtilitiesWasteManagement.getLocalFarmId = function() return 1 end
+PlayerTradingPlus.getLocalFarmId = function() return 1 end
 table.insert(g_currentMission.placeableSystem.placeables,
     newPlaceable(1, "spec_silo", {storages = {newStorage({[FillType.LIQUIDMANURE] = 50000, [FillType.MANURE] = 0}, 100000)}}))
 table.insert(g_currentMission.placeableSystem.placeables,
@@ -147,6 +147,33 @@ if xml ~= nil then
     check("discount: saved and loaded", copy.discountPercent == 10)
 end
 check("discount: old invoices have none", UWMInvoice.new().discountPercent == 0)
+
+-- a request: the buyer can't set a discount, the seller gives it when approving (user, 2026-11-02)
+check("request: form has no discount box", not UWMWizard.getFormHasDiscount(F.REQUEST) and not UWMWizard.getFormHasDiscount(F.WANTED)
+    and UWMWizard.getFormHasDiscount(F.BILL) and UWMWizard.getFormHasDiscount(F.OFFER))
+local rq = UWMInvoice.new()
+rq.sellerFarmId, rq.buyerFarmId, rq.fillTypeIndex = 1, 2, FillType.LIQUIDMANURE
+rq.amountMode, rq.liters, rq.pricePer1000, rq.repeatDays, rq.discountPercent = UWMInvoice.AMOUNT.FIXED, 10000, 20, 0, 5
+ok, key = M:handleRequest(A.CREATE, 20, {invoice = rq})
+check("request: the server refuses a discount from the buyer", not ok and key == "uwm_error_badDiscount", key)
+rq.discountPercent = 0
+table.insert(g_currentMission.placeableSystem.placeables,
+    newPlaceable(1, "spec_silo", {storages = {newStorage({[FillType.LIQUIDMANURE] = 50000}, 100000)}}))
+ok = M:handleRequest(A.CREATE, 20, {invoice = rq})
+local req = M.invoices[#M.invoices]
+dialogLog = {}
+UWMApproveDialog.instance = nil
+check("request: the seller's accept opens the approve window", ok and pcall(UWMWizard.startAccept, req))
+local ad = UWMApproveDialog.new()
+ad.invoice = req
+local rpaid, rfull, roff = UWMApproveDialog.getTotals(req, 5)
+check("request: approve window total 200 - 5 % = 190", near(rpaid, 190) and near(rfull, 200) and near(roff, 10))
+ok, key = M:handleRequest(A.ACCEPT, 10, {invoiceId = req.id, discountPercent = 100})
+check("request: 100 % refused when approving", not ok and key == "uwm_error_badDiscount" and req.discountPercent == 0, key)
+seller0, buyer0 = farms[1].money, farms[2].money
+ok, key = M:handleRequest(A.ACCEPT, 10, {invoiceId = req.id, discountPercent = 5})
+check("request: approved with 5 %, buyer pays 190", ok and req.discountPercent == 5 and near(buyer0 - farms[2].money, 190)
+    and near(farms[1].money - seller0, 190), key)
 
 print(string.format("form: %d passed, %d failed", passed, failed))
 return failed

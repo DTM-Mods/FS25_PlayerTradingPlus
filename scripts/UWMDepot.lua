@@ -1,11 +1,11 @@
--- Utilities & Waste Management: the community depot (placeable specialization "uwmDepot").
+-- Player Trading+: the community depot (placeable specialization "uwmDepot").
 -- One building: tank, manure pit, office, pallet pad (pallets spawn there) and the base-game Farma 400 (bulk pickup).
 -- The Farma model has no silo/storage specialization or active pickup; manure loads only at the pit.
 -- Slurry is collected at the tank's coupling, manure at the open end of the manure pit, and the office door opens
--- the Utilities page. The two pickups are a game LoadingStation without storages of its own (flag uwmIsDepot):
+-- the Player Trading+ page. The two pickups are a game LoadingStation without storages of its own (flag uwmIsDepot):
 -- UWMPickup tells the load trigger what a farm may load and takes the liters live from the sellers' stock.
 -- Invoices only work while a depot stands on the map (UWMManager). Only one depot per map unless the server admin
--- allows more (setting on the Utilities page).
+-- allows more (setting on the Player Trading+ page).
 -- Author: PropaineX
 
 UWMDepot = {}
@@ -46,7 +46,7 @@ end
 
 function UWMDepot.registerXMLPaths(schema, basePath)
     schema:setXMLSpecializationType("UWMDepot")
-    schema:register(XMLValueType.NODE_INDEX, basePath .. ".uwmDepot#officeTrigger", "Player trigger at the office door (opens the Utilities page)")
+    schema:register(XMLValueType.NODE_INDEX, basePath .. ".uwmDepot#officeTrigger", "Player trigger at the office door (opens the Player Trading+ page)")
     schema:register(XMLValueType.NODE_INDEX, basePath .. ".uwmDepot#farmaNode", "The referenced Farma 400 (its pipe effect meshes are kept hidden)")
     LoadingStation.registerXMLPaths(schema, basePath .. ".uwmDepot.loadingStation")
     PalletSpawner.registerXMLPaths(schema, basePath .. ".uwmDepot.palletSpawner")
@@ -118,7 +118,7 @@ function UWMDepot:onLoad(savegame)
                 end
             end
         else
-            Logging.xmlError(xmlFile, "%s could not load the Farma 400 (%s)", UtilitiesWasteManagement.TAG, filename)
+            Logging.xmlError(xmlFile, "%s could not load the Farma 400 (%s)", PlayerTradingPlus.TAG, filename)
         end
     end
 
@@ -149,7 +149,7 @@ function UWMDepot:onLoad(savegame)
     if self.isServer and PalletSpawner ~= nil then
         spec.palletSpawner = PalletSpawner.new(self.baseDirectory)
         if not spec.palletSpawner:load(self.components, xmlFile, "placeable.uwmDepot.palletSpawner", self.customEnvironment, self.i3dMappings) then
-            Logging.xmlWarning(xmlFile, "%s pallet pad could not be loaded, pallet goods can't be handed out", UtilitiesWasteManagement.TAG)
+            Logging.xmlWarning(xmlFile, "%s pallet pad could not be loaded, pallet goods can't be handed out", PlayerTradingPlus.TAG)
             spec.palletSpawner = nil
         end
     end
@@ -208,7 +208,7 @@ function UWMDepot:onDelete()
 end
 
 function UWMDepot.raiseDepotsChanged()
-    local UWM = UtilitiesWasteManagement
+    local UWM = PlayerTradingPlus
     if UWM ~= nil and UWM.manager ~= nil then
         UWM.manager:onDepotsChanged()
     end
@@ -243,7 +243,7 @@ end
 
 -- only one depot on the map, unless the server admin allows more
 function UWMDepot.getPlacingBlocked(placeable)
-    local manager = UtilitiesWasteManagement.manager
+    local manager = PlayerTradingPlus.manager
     if manager ~= nil and manager.allowMultipleDepots then
         return false
     end
@@ -261,19 +261,19 @@ function UWMDepot:canBuy(superFunc)
         return false, warning
     end
     if UWMDepot.getPlacingBlocked(self) then
-        return false, UtilitiesWasteManagement.getText("uwm_warning_oneDepot")
+        return false, PlayerTradingPlus.getText("uwm_warning_oneDepot")
     end
     return true, nil
 end
 
 function UWMDepot:getCanBePlacedAt(superFunc, x, y, z, farmId)
     if UWMDepot.getPlacingBlocked(self) then
-        return false, UtilitiesWasteManagement.getText("uwm_warning_oneDepot")
+        return false, PlayerTradingPlus.getText("uwm_warning_oneDepot")
     end
     return superFunc(self, x, y, z, farmId)
 end
 
--- office door: every farm's players may open the Utilities page here
+-- office door: every farm's players may open the Player Trading+ page here
 function UWMDepot:uwmOfficeTriggerCallback(triggerId, otherActorId, onEnter, onLeave, onStay, otherShapeId)
     if (onEnter or onLeave) and g_localPlayer ~= nil and otherActorId == g_localPlayer.rootNode then
         local spec = getSpec(self)
@@ -292,7 +292,7 @@ local UWMDepotActivatable_mt = Class(UWMDepotActivatable)
 function UWMDepotActivatable.new(placeable)
     local self = setmetatable({}, UWMDepotActivatable_mt)
     self.placeable = placeable
-    self.activateText = UtilitiesWasteManagement.getText("uwm_action_openDepot")
+    self.activateText = PlayerTradingPlus.getText("uwm_action_openDepot")
     return self
 end
 

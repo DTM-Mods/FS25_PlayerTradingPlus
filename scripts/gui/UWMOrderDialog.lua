@@ -1,4 +1,4 @@
--- Utilities & Waste Management: the UWM CO-OP form. One item per invoice (or standing order): farm, goods,
+-- Player Trading+: the UWM CO-OP form. One item per invoice (or standing order): farm, goods,
 -- price, amount, repeat; the pickup is always the depot on the map. Send hands the choices to UWMWizard.startForm,
 -- which runs the same steps and server request as before.
 -- Author: PropaineX
@@ -23,7 +23,7 @@ local MODE_TEXTS = {
 }
 
 local function getText(key)
-    return UtilitiesWasteManagement.getText(key)
+    return PlayerTradingPlus.getText(key)
 end
 
 local function unitKey(fillTypeIndex, key)
@@ -54,7 +54,7 @@ end
 
 function UWMOrderDialog.register()
     local dialog = UWMOrderDialog.new()
-    g_gui:loadGui(UtilitiesWasteManagement.modDirectory .. "gui/UWMOrderDialog.xml", UWMOrderDialog.NAME, dialog)
+    g_gui:loadGui(PlayerTradingPlus.modDirectory .. "gui/UWMOrderDialog.xml", UWMOrderDialog.NAME, dialog)
     UWMOrderDialog.instance = dialog
 end
 
@@ -63,7 +63,7 @@ function UWMOrderDialog.show(mode)
     if dialog == nil then
         return
     end
-    local farmId = UtilitiesWasteManagement.getLocalFarmId()
+    local farmId = PlayerTradingPlus.getLocalFarmId()
     if not UWMWizard.getFormIsListing(mode) and #UWMOrderDialog.getFarms(farmId) == 0 then
         InfoDialog.show(getText("uwm_wizard_noFarms"))
         return
@@ -107,7 +107,7 @@ function UWMOrderDialog.getPickupPointKey(fillTypeIndex, isPallet)
         return "uwm_form_pointDirect"
     elseif fillTypeIndex == FillType.MANURE then
         return "uwm_form_pointManure"
-    elseif UtilitiesWasteManagement.getIsBulk(fillTypeIndex) then
+    elseif PlayerTradingPlus.getIsBulk(fillTypeIndex) then
         return "uwm_form_pointSilo"
     end
     return "uwm_form_pointSlurry"
@@ -132,7 +132,7 @@ end
 
 -- 03 Pickup: the depot's name, {key, value} rows and the note under them
 function UWMOrderDialog.getPickupInfo(mode, sellerFarmId, fillTypeIndex, isPallet)
-    local UWM = UtilitiesWasteManagement
+    local UWM = PlayerTradingPlus
     local depots = UWMManager.getDepots()
     local depot = depots[1]
     local depotName = getText("uwm_form_depot")
@@ -192,7 +192,7 @@ function UWMOrderDialog:onGuiSetupFinished()
     UWMGui.applyStaticImages(self.dialogElement)
     -- our drop-and-bolt icon in the header tile (the ESC tab's image)
     if self.headIcon ~= nil and self.headIcon.setImageFilename ~= nil then
-        self.headIcon:setImageFilename(UtilitiesWasteManagement.modDirectory .. UWMFrame.ICON_FILENAME)
+        self.headIcon:setImageFilename(PlayerTradingPlus.modDirectory .. UWMFrame.ICON_FILENAME)
         self.headIcon:setImageUVs(nil, unpack(UWMFrame.getIconUVs()))
     end
 end
@@ -200,12 +200,12 @@ end
 function UWMOrderDialog:onOpen()
     UWMOrderDialog:superClass().onOpen(self)
     local texts = MODE_TEXTS[self.mode] or MODE_TEXTS[FORM.BILL]
-    self.farmId = UtilitiesWasteManagement.getLocalFarmId()
+    self.farmId = PlayerTradingPlus.getLocalFarmId()
     self.isListing = UWMWizard.getFormIsListing(self.mode)
     self.farms = self.isListing and {} or UWMOrderDialog.getFarms(self.farmId)
     -- our three goods, then a Bulk row that opens the list of bulk goods
     self.goods = {}
-    for _, good in ipairs(UtilitiesWasteManagement.goods) do
+    for _, good in ipairs(PlayerTradingPlus.goods) do
         table.insert(self.goods, good)
     end
     table.insert(self.goods, {isBulk = true})
@@ -233,8 +233,10 @@ function UWMOrderDialog:onOpen()
     self.goodsList:reloadData()
     self:resetPrice()
     self.qtyInput:setText("")
-    self.discountInput:setText("")
-    self.discountInput:setDisabled(self.isListing)
+    -- only the seller gives a discount: on a request the box says the seller sets it when approving
+    local hasDiscount = UWMWizard.getFormHasDiscount(self.mode)
+    self.discountInput:setText(self.mode == FORM.REQUEST and getText("uwm_form_sellerSetsDiscount") or "")
+    self.discountInput:setDisabled(not hasDiscount)
     self:updateAll()
     FocusManager:setFocus(self.isListing and self.goodsList or self.farmList)
 end
@@ -259,7 +261,7 @@ function UWMOrderDialog:openGoodsList(isPallet)
     if self.isPicking then
         return
     end
-    local UWM = UtilitiesWasteManagement
+    local UWM = PlayerTradingPlus
     local sellerFarmId = UWMOrderDialog.getSellerFarmId(self.mode, self.farmId, self:getOtherFarmId())
     local choices = isPallet and UWMOrderDialog.getPalletChoices(sellerFarmId) or UWMOrderDialog.getBulkChoices(sellerFarmId)
     if #choices == 0 then
@@ -332,7 +334,7 @@ function UWMOrderDialog:getForm()
         amountAll = self.amountAll and not self.isListing,
         liters = parseNumber(self.qtyInput:getText()),
         pricePer1000 = parseNumber(self.priceInput:getText()),
-        discountPercent = self.isListing and 0 or (parseNumber(self.discountInput:getText()) or 0),
+        discountPercent = UWMWizard.getFormHasDiscount(self.mode) and (parseNumber(self.discountInput:getText()) or 0) or 0,
         isPallet = self:getIsPallet(),
         palletSize = UWMPallets.SIZES[self.palletSizeIndex],
         repeatDays = self.isListing and UWMInvoice.REPEAT_ONCE or UWMOrderDialog.REPEATS[self.repeatIndex].days
@@ -340,7 +342,7 @@ function UWMOrderDialog:getForm()
 end
 
 function UWMOrderDialog:updateAll()
-    local UWM = UtilitiesWasteManagement
+    local UWM = PlayerTradingPlus
     local form = self:getForm()
     local ft = form.fillTypeIndex
     local farmName = form.otherFarmId ~= nil and UWMManager.getFarmName(form.otherFarmId) or getText("uwm_form_anyFarm")
@@ -443,7 +445,7 @@ function UWMOrderDialog:populateCellForItemInSection(list, section, index, cell)
     if good.isBulk or good.isPallet then
         local picked = good.isBulk and self.bulkFillType or self.palletFillType
         name:setText(getText(good.isBulk and "uwm_form_bulk" or "uwm_form_pallet"))
-        price:setText(picked ~= nil and UtilitiesWasteManagement.getGoodName(picked) or getText("uwm_form_bulkPick"))
+        price:setText(picked ~= nil and PlayerTradingPlus.getGoodName(picked) or getText("uwm_form_bulkPick"))
         return
     end
     name:setText(getText(good.textKey))

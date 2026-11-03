@@ -1,4 +1,4 @@
--- Utilities & Waste Management: network events.
+-- Player Trading+: network events.
 -- UWMRequestEvent  client -> server  a farm manager's request (invoices, depot membership) or an admin setting
 -- UWMResultEvent   server -> client  the answer to that request
 -- UWMSyncEvent     server -> clients the whole invoice list (on join and after every change)
@@ -14,7 +14,8 @@ function UWMRequestEvent.emptyNew()
 end
 
 -- data: {invoice = UWMInvoice (CREATE only), invoiceId, reserve, flag (admin setting), targetPlaceables,
---        listing = UWMListing (POST_LISTING only), listingId, liters (TRADE_LISTING)}
+--        listing = UWMListing (POST_LISTING only), listingId, liters (TRADE_LISTING),
+--        discountPercent (ACCEPT by the seller of a request; -1 on the wire = not given)}
 -- The buyer's electricity productions travel as network objects: a placed building's uniqueId is NOT sent to
 -- clients (Placeable:writeStream), each client makes up its own, so the server turns the objects into its own
 -- uniqueIds (data.targets) when the request arrives.
@@ -36,6 +37,7 @@ function UWMRequestEvent:writeStream(streamId, connection)
     streamWriteBool(streamId, data.flag == true)
     streamWriteInt32(streamId, data.listingId or 0)
     streamWriteFloat32(streamId, data.liters or 0)
+    streamWriteFloat32(streamId, data.discountPercent or -1)
     if streamWriteBool(streamId, data.listing ~= nil) then
         data.listing:writeStream(streamId)
     end
@@ -61,6 +63,8 @@ function UWMRequestEvent:readStream(streamId, connection)
     self.data.flag = streamReadBool(streamId)
     self.data.listingId = streamReadInt32(streamId)
     self.data.liters = streamReadFloat32(streamId)
+    local discount = streamReadFloat32(streamId)
+    self.data.discountPercent = discount >= 0 and discount or nil
     if streamReadBool(streamId) then
         self.data.listing = UWMListing.new()
         self.data.listing:readStream(streamId)
@@ -82,7 +86,7 @@ function UWMRequestEvent:run(connection)
     if connection:getIsServer() then
         return
     end
-    local manager = UtilitiesWasteManagement.manager
+    local manager = PlayerTradingPlus.manager
     if manager == nil then
         return
     end
@@ -103,16 +107,16 @@ function UWMRequestEvent.getUniqueIds(placeables)
 end
 
 -- runs the request straight away on a host / in singleplayer, else sends it to the server; the answer comes
--- back to UtilitiesWasteManagement.onRequestResult
+-- back to PlayerTradingPlus.onRequestResult
 function UWMRequestEvent.sendRequest(action, data)
     if g_server ~= nil then
-        local manager = UtilitiesWasteManagement.manager
+        local manager = PlayerTradingPlus.manager
         if manager ~= nil then
             if data.targetPlaceables ~= nil then
                 data.targets = UWMRequestEvent.getUniqueIds(data.targetPlaceables)
             end
             local ok, key = manager:handleRequest(action, g_currentMission.playerUserId, data)
-            UtilitiesWasteManagement.onRequestResult(ok, key)
+            PlayerTradingPlus.onRequestResult(ok, key)
         end
     else
         g_client:getServerConnection():sendEvent(UWMRequestEvent.new(action, data))
@@ -148,7 +152,7 @@ end
 
 function UWMResultEvent:run(connection)
     if connection:getIsServer() then
-        UtilitiesWasteManagement.onRequestResult(self.ok, self.key)
+        PlayerTradingPlus.onRequestResult(self.ok, self.key)
     end
 end
 
@@ -173,7 +177,7 @@ end
 
 function UWMSyncEvent:readStream(streamId, connection)
     -- read everything even without a manager, or the stream breaks
-    local manager = UtilitiesWasteManagement.manager or UWMManager.new(false)
+    local manager = PlayerTradingPlus.manager or UWMManager.new(false)
     manager:readStream(streamId)
 end
 
@@ -218,7 +222,7 @@ function UWMNotifyEvent:readStream(streamId, connection)
 end
 
 function UWMNotifyEvent:run(connection)
-    UtilitiesWasteManagement.showNotification(self.farmId, self.key, self.farmName, self.fillTypeIndex, self.detail)
+    PlayerTradingPlus.showNotification(self.farmId, self.key, self.farmName, self.fillTypeIndex, self.detail)
 end
 
 function UWMNotifyEvent.sendEvent(farmId, key, farmName, fillTypeIndex, detail)
@@ -226,7 +230,7 @@ function UWMNotifyEvent.sendEvent(farmId, key, farmName, fillTypeIndex, detail)
         g_server:broadcastEvent(UWMNotifyEvent.new(farmId, key, farmName, fillTypeIndex, detail), false)
         -- a host / singleplayer player gets no broadcast of their own
         if g_currentMission:getIsClient() then
-            UtilitiesWasteManagement.showNotification(farmId, key, farmName, fillTypeIndex, detail)
+            PlayerTradingPlus.showNotification(farmId, key, farmName, fillTypeIndex, detail)
         end
     end
 end
