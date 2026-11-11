@@ -85,8 +85,29 @@ office.
 <!-- /dtm-screenshots -->
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/DTM-Mods/.github/main/assets/files.jpg" alt="Files" width="100%">
+  <img src="https://raw.githubusercontent.com/DTM-Mods/.github/main/assets/installation.jpg" alt="Installation" width="100%">
 </p>
+
+Download `FS25_PlayerTradingPlus.zip` from the [latest release](https://github.com/DTM-Mods/FS25_PlayerTradingPlus/releases/latest) and put it in `Documents/My Games/FarmingSimulator2025/mods`, without unzipping or renaming it. In multiplayer, the server and every player need the same version.
+
+Saves from Utilities & Waste Management keep their invoices and orders, but the depot has to be placed again.
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/DTM-Mods/.github/main/assets/license.jpg" alt="License" width="100%">
+</p>
+
+MIT, see `LICENSE`.
+
+<details>
+<summary><b>For developers</b>: files, building and tests</summary>
+
+### Building the zip yourself
+
+Run `python tools/build_zip.py FS25_PlayerTradingPlus.zip` and put the zip in the FS25 `mods` folder.
+Don't rename the zip. Saves from Utilities & Waste Management keep their invoices and orders, but the depot has to
+be placed again.
+
+### Files
 
 - `modDesc.xml` - mod description and all texts
 - `scripts/PlayerTradingPlus.lua` - startup, saving, join sync, notifications, finance rows
@@ -105,26 +126,12 @@ office.
 - `previews/` - mock-ups and the scripts that drew them; `source/` - depot model and texture sources
 - `DESIGN.md` - the design and the rules it follows
 
-<p align="center">
-  <img src="https://raw.githubusercontent.com/DTM-Mods/.github/main/assets/installation.jpg" alt="Installation" width="100%">
-</p>
-
-Run `python tools/build_zip.py FS25_PlayerTradingPlus.zip` and put the zip in the FS25 `mods` folder.
-Don't rename the zip. Saves from Utilities & Waste Management keep their invoices and orders, but the depot has to
-be placed again.
-
-<p align="center">
-  <img src="https://raw.githubusercontent.com/DTM-Mods/.github/main/assets/testing.jpg" alt="Testing" width="100%">
-</p>
+### Tests
 
 `python tests/run.py <folder with lupa> . tests` runs the trading scenarios; `python tests/check.py <folder with
 lupa> .` checks Lua syntax, XML and that every text key exists.
 
-<p align="center">
-  <img src="https://raw.githubusercontent.com/DTM-Mods/.github/main/assets/license.jpg" alt="License" width="100%">
-</p>
-
-MIT, see `LICENSE`.
+</details>
 
 ---
 
