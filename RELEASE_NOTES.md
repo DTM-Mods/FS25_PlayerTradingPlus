@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="https://raw.githubusercontent.com/DTM-Mods/.github/main/assets/patch-notes.jpg" alt="Patch notes" width="100%">
+</p>
+
 # 0.12.1.0 — November 3, 2026
 
 Renamed to **Player Trading+** (was Utilities & Waste Management). Zip `FS25_PlayerTradingPlus.zip`, new icon
