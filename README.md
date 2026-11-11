@@ -72,6 +72,18 @@ suspended until paid. A member can leave but can't rejoin for 6 months. No depot
 The depot has a slurry tank, a manure pit, UNIA silos with a loading pipe for bulk goods, a pallet pad and an
 office.
 
+<!-- dtm-screenshots -->
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/DTM-Mods/.github/main/assets/screenshots.jpg" alt="Screenshots" width="100%">
+</p>
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/DTM-Mods/.github/main/assets/screens/FS25_PlayerTradingPlus/shop.jpg" alt="The Community Depot" width="100%">
+</p>
+
+<!-- /dtm-screenshots -->
+
 <p align="center">
   <img src="https://raw.githubusercontent.com/DTM-Mods/.github/main/assets/files.jpg" alt="Files" width="100%">
 </p>
