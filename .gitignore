@@ -1,4 +1,28 @@
+# --- DTM standard (the same in every DTM-Mods repository) ---
+# builds and downloads
+dist/
 *.zip
+# Python
+__pycache__/
+*.pyc
+/venv/
+# logs, backups, editor and system files
+*.log
+*.bak
+*backup*/
+*Backup*/
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/
+# Blender and other 3D work files: big, and the game doesn't load them (keep them outside git)
+*.blend
+*.blend[0-9]
+*.obj
+*.mtl
+# --- end of the DTM standard; this repository's own rules follow ---
+
 # working notes (mention other players / savegames) and a preview made from a game screenshot stay local
 CLAUDE.md
 previews/status_header_compare_v1.png
@@ -7,19 +31,9 @@ source/textures/
 previews/details_preview_v1.png
 
 # Python bytecode
-__pycache__/
 
 # local logs and the server upload helper (server login) stay local
 debug.log
 previews/depot_editor_pid.txt
 previews/depot_export_layout.log
 previews/upload_testing.py
-
-# Work files kept local, not in git (PropaineX rule 2026-11-11)
-*.blend
-*.blend[0-9]
-*.obj
-*.mtl
-*.bak
-*backup*/
-*Backup*/
