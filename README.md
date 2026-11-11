@@ -47,6 +47,7 @@ farms in singleplayer. Money only moves between farms. Everything goes through t
 <p align="center">
   <img src="https://raw.githubusercontent.com/DTM-Mods/.github/main/assets/how-it-works.jpg" alt="How it works" width="100%">
 </p>
+
 - **Player Trading+ page** in the ESC menu (also from the depot office door). It appears once a depot stands on
   the map. Tabs INCOMING / OUTGOING / STANDING ORDERS, summary cards, invoice cards with status pills.
 - **New** opens the **PT+ CO-OP** window: *Invoice a farm*, *Request an invoice*, *Create a standing buy order*,
@@ -74,6 +75,7 @@ office.
 <p align="center">
   <img src="https://raw.githubusercontent.com/DTM-Mods/.github/main/assets/files.jpg" alt="Files" width="100%">
 </p>
+
 - `modDesc.xml` - mod description and all texts
 - `scripts/PlayerTradingPlus.lua` - startup, saving, join sync, notifications, finance rows
 - `scripts/UWMInvoice.lua`, `scripts/UWMListing.lua` - one invoice / one standing order: fields, network, save
@@ -94,6 +96,7 @@ office.
 <p align="center">
   <img src="https://raw.githubusercontent.com/DTM-Mods/.github/main/assets/installation.jpg" alt="Installation" width="100%">
 </p>
+
 Run `python tools/build_zip.py FS25_PlayerTradingPlus.zip` and put the zip in the FS25 `mods` folder.
 Don't rename the zip. Saves from Utilities & Waste Management keep their invoices and orders, but the depot has to
 be placed again.
@@ -101,12 +104,14 @@ be placed again.
 <p align="center">
   <img src="https://raw.githubusercontent.com/DTM-Mods/.github/main/assets/testing.jpg" alt="Testing" width="100%">
 </p>
+
 `python tests/run.py <folder with lupa> . tests` runs the trading scenarios; `python tests/check.py <folder with
 lupa> .` checks Lua syntax, XML and that every text key exists.
 
 <p align="center">
   <img src="https://raw.githubusercontent.com/DTM-Mods/.github/main/assets/license.jpg" alt="License" width="100%">
 </p>
+
 MIT, see `LICENSE`.
 
 ---
