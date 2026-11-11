@@ -14,3 +14,12 @@ debug.log
 previews/depot_editor_pid.txt
 previews/depot_export_layout.log
 previews/upload_testing.py
+
+# Work files kept local, not in git (PropaineX rule 2026-11-11)
+*.blend
+*.blend[0-9]
+*.obj
+*.mtl
+*.bak
+*backup*/
+*Backup*/
