@@ -1,4 +1,32 @@
-# Player Trading+ (FS25)
+<p align="center">
+  <a href="https://github.com/DTM-Mods"><img src="https://raw.githubusercontent.com/DTM-Mods/.github/main/assets/dtm-header.jpg" alt="DTM Mods by PropaineX & Fennell" width="100%"></a>
+</p>
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/DTM-Mods/.github/main/assets/icons/FS25_PlayerTradingPlus.png" alt="Player Trading+ Pro Edition icon" width="128">
+</p>
+
+<h1 align="center">Player Trading+ Pro Edition</h1>
+
+<p align="center">
+  <img src="https://img.shields.io/badge/Farming%20Simulator-25-2E6B4F" alt="Farming Simulator 25">
+  <a href="https://github.com/DTM-Mods/FS25_PlayerTradingPlus/releases/latest"><img src="https://img.shields.io/github/v/release/DTM-Mods/FS25_PlayerTradingPlus?label=version&color=D9A441" alt="Latest version"></a>
+  <img src="https://img.shields.io/badge/multiplayer-supported-2E6B4F" alt="Multiplayer supported">
+  <a href="https://github.com/DTM-Mods"><img src="https://img.shields.io/badge/DTM-Mods-143326" alt="DTM Mods"></a>
+</p>
+
+<p align="center">
+  <b>Farms buy and sell goods with each other through invoices and standing orders.</b><br>
+  <sub>by PropaineX</sub>
+</p>
+
+<p align="center">
+  <a href="https://github.com/DTM-Mods/FS25_PlayerTradingPlus/releases/latest"><img src="https://img.shields.io/badge/Download-latest%20release-D9A441?style=for-the-badge&logo=github&logoColor=143326&labelColor=E9C77A" alt="Download the latest release"></a>
+</p>
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/DTM-Mods/.github/main/assets/features.jpg" alt="Features" width="100%">
+</p>
 
 Farming Simulator 25 mod by PropaineX. Version 0.12.1.0 (work in progress, not yet tried in game in full).
 Renamed from "Utilities & Waste Management" in 0.12.0.0.
@@ -70,3 +98,10 @@ lupa> .` checks Lua syntax, XML and that every text key exists.
 
 ## License
 MIT, see `LICENSE`.
+
+---
+
+<p align="center">
+  <a href="https://github.com/DTM-Mods"><img src="https://raw.githubusercontent.com/DTM-Mods/.github/main/assets/dtm-intro.gif" alt="DTM Mods by PropaineX & Fennell" width="420"></a><br>
+  <sub>Part of <a href="https://github.com/DTM-Mods">DTM Mods</a> (Dead To Me) by PropaineX & Fennell</sub>
+</p>
