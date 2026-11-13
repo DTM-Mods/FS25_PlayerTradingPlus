@@ -1,0 +1,42 @@
+{
+  "2.jpg": {
+    "title": "The Community Depot",
+    "text": "Tank, manure pit, silo pipe, pallet pad and office in one building.",
+    "at": "bottom"
+  },
+  "3.jpg": {
+    "title": "Collect what you bought",
+    "text": "Slurry at the tank's coupling, manure at the pit, pallets on the pad.",
+    "at": "bottom"
+  },
+  "4.jpg": {
+    "title": "Trade between farms",
+    "text": "Approve what other farms bill you or ask of you, right in the ESC menu.",
+    "at": "bottom"
+  },
+  "5.jpg": {
+    "title": "Your invoices",
+    "text": "What you billed, what is running, and what waits at the depot.",
+    "at": "bottom"
+  },
+  "6.jpg": {
+    "title": "Standing orders",
+    "text": "Post a buy or sell order at your price; any farm can fill it in part or in full.",
+    "at": "bottom"
+  },
+  "7.jpg": {
+    "title": "Your orders",
+    "text": "See how much of each order has been bought or sold so far.",
+    "at": "bottom"
+  },
+  "8.jpg": {
+    "title": "Start a trade",
+    "text": "Invoice a farm, request an invoice, or post a standing buy or sell order.",
+    "at": "bottom"
+  },
+  "9.jpg": {
+    "title": "Set your own price",
+    "text": "Pick the farm and the goods; the game's price is shown as a guide.",
+    "at": "bottom"
+  }
+}
