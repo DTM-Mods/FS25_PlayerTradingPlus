@@ -28,7 +28,7 @@
   <img src="https://raw.githubusercontent.com/DTM-Mods/.github/main/assets/features.jpg" alt="Features" width="100%">
 </p>
 
-Farming Simulator 25 mod by PropaineX. Version 0.12.1.1 (work in progress, not yet tried in game in full).
+Farming Simulator 25 mod by DTM Mods, PropaineX. Version 0.12.1.1, checked in game.
 Renamed from "Utilities & Waste Management" in 0.12.0.0.
 
 Farms buy and sell goods with each other through invoices and standing orders, in multiplayer or with several

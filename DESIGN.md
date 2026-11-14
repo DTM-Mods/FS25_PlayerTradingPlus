@@ -1,8 +1,7 @@
 # Player Trading+ (FS25) - design (was Utilities & Waste Management)
 
-Author PropaineX. Started 2026-10-23. Status 2026-11-03: 0.12.1.0. Renamed to Player Trading+ in 0.12.0.0.
-Everything below is built; the newer parts (goods in the depot, bulk, pallets, discounts, the CO-OP windows) are
-not yet tried in game. File notes in CLAUDE.md.
+Author DTM Mods, PropaineX. Started 2026-10-23. Status 2026-11-14: 0.12.1.1. Renamed to Player Trading+ in 0.12.0.0.
+Everything below is built and was checked in game (2026-11-14). File notes in CLAUDE.md.
 
 Farms trade **electricity, slurry, manure, bulk goods and pallet goods** with each other through invoices and
 standing orders. (Propane removed by the user, 2026-10-23; bulk and pallets added 2026-10-28.)

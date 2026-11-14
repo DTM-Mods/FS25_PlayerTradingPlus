@@ -92,5 +92,4 @@ Changelog 0.12.1.0 :
 
 ## Before uploading
 
-- Work in progress: version 0.12.1.0 has not been fully tried in game yet. ModHub expects a finished, tested mod; test it fully (and consider a 1.0.0.0 version) before uploading.
 - Translations in the mod itself: English only. The title, description and every menu, page and shop text have no German or French.
