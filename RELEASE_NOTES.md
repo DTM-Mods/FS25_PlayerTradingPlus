@@ -2,6 +2,10 @@
   <img src="https://raw.githubusercontent.com/DTM-Mods/.github/main/assets/patch-notes.jpg" alt="Patch notes" width="100%">
 </p>
 
+# 1.0.0.1
+
+- Updated for the current game version: modDesc descVersion 116 (the game build of 2026-10-27; GIANTS TestRunner 0.9.24 accepts only 116).
+
 # 1.0.0.0 — November 16, 2026
 
 - Meets the GIANTS ModHub checks (TestRunner): textures, icon and modDesc brought up to date (German description added,

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" standalone="no" ?>
-<modDesc descVersion="115">
+<modDesc descVersion="116">
     <author>DTM Mods, PropaineX</author>
-    <version>1.0.0.0</version>
+    <version>1.0.0.1</version>
     <title>
         <en>Player Trading+ Pro Edition</en>
     </title>
@@ -16,7 +16,10 @@ Every other farm is offered membership of the depot. Members and the owner share
 
 Goods put up for sale leave the seller's storage and wait in the depot until the buyer collects them; unsold goods go back home. Buyers pay up front and anyone on the buying farm collects at the depot: slurry at the tank's coupling, manure at the open end of the manure pit, bulk goods at the silo pipe, pallets on the pallet pad. Liters that are never collected are refunded when the invoice ends. Electricity goes straight from the seller's power-producing productions into the productions the buyer picked, and is paid for as it arrives.
 
-Multiplayer: everything runs on the server.]]></en>
+Multiplayer: everything runs on the server.
+
+Changelog 1.0.0.1:
+- Updated for the current game version (modDesc version 116).]]></en>
         <de><![CDATA[Höfe kaufen und verkaufen untereinander: Strom, Gülle, Mist, Schüttgut (Getreide und mehr) und Palettenware, über Rechnungen und Daueraufträge. Geld fließt nur zwischen den Höfen.
 
 Öffne die Seite Player Trading+ im ESC-Menü (oder an der Bürotür des Depots). Drücke "New", um einem Hof eine Rechnung zu stellen, eine Rechnung anzufordern oder einen Dauerauftrag zum Kaufen oder Verkaufen einzustellen, den jeder Hof ganz oder teilweise erfüllen kann. Lege deinen eigenen Preis pro 1.000 Liter fest (der Preis des Spiels wird als Richtwert angezeigt), eine feste Menge oder den gesamten Vorrat, einen optionalen Rabatt, und handle einmalig, täglich oder wöchentlich. Nur Farmmanager können handeln.
@@ -27,7 +30,10 @@ Jedem anderen Hof wird die Mitgliedschaft im Depot angeboten. Mitglieder und Bes
 
 Zum Verkauf gestellte Waren verlassen das Lager des Verkäufers und warten im Depot, bis der Käufer sie abholt; nicht verkaufte Waren gehen zurück. Käufer zahlen im Voraus, und jeder auf dem kaufenden Hof holt am Depot ab: Gülle an der Kupplung des Tanks, Mist am offenen Ende der Mistplatte, Schüttgut am Silorohr, Paletten auf dem Palettenplatz. Liter, die nie abgeholt werden, werden erstattet, wenn die Rechnung endet. Strom fließt direkt von den stromerzeugenden Produktionen des Verkäufers in die Produktionen, die der Käufer gewählt hat, und wird bezahlt, sobald er ankommt.
 
-Multiplayer: alles läuft auf dem Server.]]></de>
+Multiplayer: alles läuft auf dem Server.
+
+Changelog 1.0.0.1:
+- An die aktuelle Spielversion angepasst (modDesc-Version 116).]]></de>
     </description>
     <iconFilename>icon_PlayerTradingPlus.dds</iconFilename>
     <multiplayer supported="true" />
