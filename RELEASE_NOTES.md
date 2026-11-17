@@ -2,6 +2,12 @@
   <img src="https://raw.githubusercontent.com/DTM-Mods/.github/main/assets/patch-notes.jpg" alt="Patch notes" width="100%">
 </p>
 
+# 1.0.0.0 — November 16, 2026
+
+- Meets the GIANTS ModHub checks (TestRunner): textures, icon and modDesc brought up to date (German description added,
+  an unused texture left out of the zip).
+- Errors are no longer hidden: they show in the log.
+
 # 0.12.1.1 — November 13, 2026
 
 - The author now shows as **DTM Mods, PropaineX** in the mod list.

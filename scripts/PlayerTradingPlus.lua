@@ -160,6 +160,7 @@ function UWM:loadMap(filename)
 end
 
 function UWM:deleteMap()
+    UWMStock.restoreProductionStorages()
     g_messageCenter:unsubscribeAll(UWM)
     UWMPickup.removeHooks()
     if UWM.manager ~= nil then
@@ -170,6 +171,10 @@ function UWM:deleteMap()
 end
 
 function UWM:update(dt)
+    -- a production update that stopped with an error left its storage views in place
+    if #UWMStock.swappedStorages > 0 then
+        UWMStock.restoreProductionStorages()
+    end
     if UWM.manager ~= nil then
         UWM.manager:update(dt)
     end

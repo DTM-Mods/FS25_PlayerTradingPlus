@@ -1,0 +1,4 @@
+# Files that stay in the repository but never go into the mod zip (see DTM-Mods/.github ci/README.md)
+
+# untinted source of the painted steel colours (source/make_dds.py); the depot only uses the tinted copies
+placeables/depot/textures/uwmPaintedSteel_diffuse.dds

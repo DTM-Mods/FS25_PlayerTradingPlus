@@ -14,6 +14,19 @@ UWMStock.KIND_PRODUCTION = 3
 -- true while this mod moves goods itself, so the reservation guard lets it through
 UWMStock.isMovingGoods = false
 
+-- {point, storage} for every production storage swapped for a view; only filled while ProductionChainManager.update runs
+UWMStock.swappedStorages = {}
+
+-- Gives every production point its real storage back. Runs right after the update, and every frame from
+-- PlayerTradingPlus' update: an entry still here then means the update stopped with an error (shown in the log).
+function UWMStock.restoreProductionStorages()
+    local swapped = UWMStock.swappedStorages
+    for i = #swapped, 1, -1 do
+        swapped[i].point.storage = swapped[i].storage
+        swapped[i] = nil
+    end
+end
+
 -- ProductionChainManager handles automatic output sales/distribution outside LoadingStation.
 -- Give that synchronous update a storage view containing only unreserved output. Writes translate
 -- back to the real storage, so both the quantity sold and the money earned exclude held goods.
@@ -46,7 +59,6 @@ function UWMStock.updateProductionSales(chain, superFunc, ...)
         end
     end
 
-    local replaced = {}
     for _, point in pairs(chain.productionPoints or {}) do
         local storage = point.storage
         local held = heldByStorage[storage]
@@ -74,16 +86,16 @@ function UWMStock.updateProductionSales(chain, superFunc, ...)
                 end
                 return value
             end})
-            table.insert(replaced, {point = point, storage = storage})
+            table.insert(UWMStock.swappedStorages, {point = point, storage = storage})
             point.storage = view
         end
     end
-    -- Restore object identity even if another mod or the game throws during the update.
+    -- Restore object identity. If another mod or the game throws during the update, the error goes to the log
+    -- and PlayerTradingPlus' update restores the real storages (UWMStock.restoreProductionStorages).
     local function pack(...) return {n = select("#", ...), ...} end
-    local result = pack(pcall(superFunc, chain, ...))
-    for _, entry in ipairs(replaced) do entry.point.storage = entry.storage end
-    if not result[1] then error(result[2], 0) end
-    return unpack(result, 2, result.n)
+    local result = pack(superFunc(chain, ...))
+    UWMStock.restoreProductionStorages()
+    return unpack(result, 1, result.n)
 end
 
 function UWMStock.installProductionHooks()

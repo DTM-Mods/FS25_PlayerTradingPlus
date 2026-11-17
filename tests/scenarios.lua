@@ -719,6 +719,11 @@ UWMStock.updateProductionSales(chain, autoSell)
 check("multiple productions reserve 500000 once across the farm", near(sold, 850000)
     and near(UWMStock.getStock(1, FillType.ELECTRICCHARGE), 500000))
 local success = pcall(UWMStock.updateProductionSales, chain, function() error("test failure") end)
+-- the next frame gives the production points their real storage back (manager left out: only the restore runs)
+local savedManager = PlayerTradingPlus.manager
+PlayerTradingPlus.manager = nil
+PlayerTradingPlus:update(16)
+PlayerTradingPlus.manager = savedManager
 check("failed auto sell restores the real storage", not success and powerPoint.storage == powerStorage and extraPoint.storage == extraStorage)
 M:handleRequest(A.WITHDRAW_LISTING, 10, {listingId = powerOffer.id})
 UWMStock.updateProductionSales(chain, autoSell)
