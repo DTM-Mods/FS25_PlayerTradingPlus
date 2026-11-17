@@ -35,61 +35,62 @@ Player Trading+ Pro Edition
 
 ## Description English
 ```text
-Player Trading+ lets farms buy and sell with each other: electricity, slurry, manure, bulk goods such as grain, and pallet goods, through invoices and standing orders. Money only moves between farms. Made for multiplayer; it also works with several farms in single player.
+Category: Production > Selling Points (Community Depot)
+Price: $268,000
+Monthly upkeep: $268, shared equally by the depot's owner and member farms
 
-- Invoice a farm, request an invoice, or post a standing buy or sell order that any member farm can fill in part or in full
-- Set your own price per 1,000 liters (the game's price is shown as a guide), an amount or everything in stock, a discount, and trade once, daily or weekly
-- Goods for sale wait in the depot until the buyer collects them; unsold goods go back home and liters never collected are refunded
-- Collect slurry at the tank coupling, manure at the manure pit, bulk goods at the silo pipe and pallets on the pallet pad
-- Electricity goes straight from the seller's power productions into the buyer's productions
-- Every farm is offered membership of the depot; members share its daily upkeep
-- Only farm managers can trade
+Farms buy and sell with each other: electricity, slurry, manure, bulk goods (grain and more) and pallet goods, through invoices and standing orders. Money only moves between farms.
 
-How to use: buy the Community Depot (shop: Production > Selling Points, 268,000), then open the Player Trading+ page in the ESC menu.
+Open the Player Trading+ page in the ESC menu (or at the depot office door). Press New to invoice a farm, request an invoice, or post a standing buy or sell order that any farm can fill in part or in full. Set your own price per 1,000 liters (the game's price is shown as a guide), a set amount or everything in stock, an optional discount, and trade once, every day or every week. Only farm managers can trade.
 
-Changelog 0.12.1.0:
-- Renamed to Player Trading+ (was Utilities & Waste Management). Invoices and orders carry over; a depot placed under the old name has to be placed again.
-- The mod description is up to date.
+Everything runs through the Community Depot, the building this mod adds to the shop. Without a depot on the map there is no trading. One depot per map; the server admin can allow more on the Player Trading+ page.
+
+Every other farm is offered membership of the depot. Members and the owner share the depot's upkeep equally; it is taken every day. A member who can't pay builds up a debt; two months in a row ending in debt and the farm is suspended until it pays. A member can leave, but can't rejoin for 6 months; any debt is taken from its account when it leaves, even into the red. Farms that said no or are suspended can't trade. Invoices they already paid can still be collected or ended.
+
+Goods put up for sale leave the seller's storage and wait in the depot until the buyer collects them; unsold goods go back home. Buyers pay up front and anyone on the buying farm collects at the depot: slurry at the tank's coupling, manure at the open end of the manure pit, bulk goods at the silo pipe, pallets on the pallet pad. Liters that are never collected are refunded when the invoice ends. Electricity goes straight from the seller's power-producing productions into the productions the buyer picked, and is paid for as it arrives.
+
+Multiplayer: everything runs on the server.
 ```
 
 ## Description German
 ```text
-Mit Player Trading+ handeln Höfe untereinander: Strom, Gülle, Mist, Schüttgut wie Getreide und Palettenwaren, über Rechnungen und Daueraufträge. Geld fließt nur zwischen den Höfen. Für den Mehrspielermodus gemacht; funktioniert auch mit mehreren Höfen im Einzelspieler.
-
-- Einem Hof eine Rechnung stellen, eine Rechnung anfordern oder einen Kauf- oder Verkaufsauftrag einstellen, den jeder Mitgliedshof ganz oder teilweise erfüllen kann
-- Eigener Preis pro 1.000 Liter (der Spielpreis wird als Richtwert angezeigt), eine feste Menge oder alles auf Lager, ein Rabatt, und Handel einmalig, täglich oder wöchentlich
-- Angebotene Waren warten im Depot, bis der Käufer sie abholt; Unverkauftes geht zurück, nie abgeholte Liter werden erstattet
-- Gülle am Anschluss des Tanks, Mist an der Mistgrube, Schüttgut am Silorohr und Paletten auf dem Palettenplatz abholen
-- Strom fließt direkt von den Stromproduktionen des Verkäufers in die Produktionen des Käufers
-- Jedem Hof wird die Mitgliedschaft im Depot angeboten; die Mitglieder teilen sich den täglichen Unterhalt
-- Nur Hofmanager können handeln
-
-So geht's: das Community Depot kaufen (Shop: Produktion > Verkaufsstellen, 268.000), dann die Seite Player Trading+ im ESC-Menü öffnen.
-
-Changelog 0.12.1.0:
-- Umbenannt in Player Trading+ (vorher Utilities & Waste Management). Rechnungen und Aufträge bleiben erhalten; ein unter dem alten Namen platziertes Depot muss neu platziert werden.
-- Die Modbeschreibung ist auf dem neuesten Stand.
+Kategorie: Produktion > Verkaufsstellen (Community Depot)
+Preis: 268.000 €
+Monatliche Unterhaltskosten: 268 €, zu gleichen Teilen auf Besitzer und Mitgliedshöfe des Depots verteilt
+
+Höfe kaufen und verkaufen untereinander: Strom, Gülle, Mist, Schüttgut (Getreide und mehr) und Palettenware, über Rechnungen und Daueraufträge. Geld fließt nur zwischen den Höfen.
+
+Öffne die Seite Player Trading+ im ESC-Menü (oder an der Bürotür des Depots). Drücke "New", um einem Hof eine Rechnung zu stellen, eine Rechnung anzufordern oder einen Dauerauftrag zum Kaufen oder Verkaufen einzustellen, den jeder Hof ganz oder teilweise erfüllen kann. Lege deinen eigenen Preis pro 1.000 Liter fest (der Preis des Spiels wird als Richtwert angezeigt), eine feste Menge oder den gesamten Vorrat, einen optionalen Rabatt, und handle einmalig, täglich oder wöchentlich. Nur Farmmanager können handeln.
+
+Alles läuft über das Community Depot, das Gebäude, das dieser Mod in den Shop bringt. Ohne Depot auf der Karte gibt es keinen Handel. Ein Depot pro Karte; der Server-Admin kann auf der Seite Player Trading+ weitere erlauben.
+
+Jedem anderen Hof wird die Mitgliedschaft im Depot angeboten. Mitglieder und Besitzer teilen sich die Unterhaltskosten des Depots zu gleichen Teilen; sie werden täglich abgebucht. Ein Mitglied, das nicht zahlen kann, macht Schulden; endet es zwei Monate in Folge mit Schulden, wird der Hof gesperrt, bis er zahlt. Ein Mitglied kann austreten, aber 6 Monate lang nicht wieder eintreten; offene Schulden werden beim Austritt vom Konto abgebucht, auch ins Minus. Höfe, die abgelehnt haben oder gesperrt sind, können nicht handeln. Bereits bezahlte Rechnungen können sie trotzdem noch abholen oder beenden.
+
+Zum Verkauf gestellte Waren verlassen das Lager des Verkäufers und warten im Depot, bis der Käufer sie abholt; nicht verkaufte Waren gehen zurück. Käufer zahlen im Voraus, und jeder auf dem kaufenden Hof holt am Depot ab: Gülle an der Kupplung des Tanks, Mist am offenen Ende der Mistplatte, Schüttgut am Silorohr, Paletten auf dem Palettenplatz. Liter, die nie abgeholt werden, werden erstattet, wenn die Rechnung endet. Strom fließt direkt von den stromerzeugenden Produktionen des Verkäufers in die Produktionen, die der Käufer gewählt hat, und wird bezahlt, sobald er ankommt.
+
+Multiplayer: alles läuft auf dem Server.
 ```
 
 ## Description French
 ```text
-Player Trading+ permet aux fermes d'acheter et de vendre entre elles : électricité, lisier, fumier, vrac comme les céréales, et marchandises en palettes, par factures et ordres permanents. L'argent ne circule qu'entre les fermes. Conçu pour le multijoueur ; fonctionne aussi avec plusieurs fermes en solo.
+Catégorie : Production > Points de vente (Community Depot)
+Prix : 268 000 €
+Entretien mensuel : 268 €, partagé à parts égales entre le propriétaire du dépôt et les fermes membres
 
-- Facturer une ferme, demander une facture, ou publier un ordre d'achat ou de vente que toute ferme membre peut remplir en partie ou en totalité
-- Votre prix par 1 000 litres (le prix du jeu sert de repère), une quantité ou tout le stock, une remise, et un échange unique, quotidien ou hebdomadaire
-- Les marchandises en vente attendent au dépôt jusqu'à ce que l'acheteur les récupère ; les invendus repartent et les litres non récupérés sont remboursés
-- Lisier au raccord de la cuve, fumier à la fosse, vrac au tuyau du silo, palettes sur l'aire à palettes
-- L'électricité va directement des productions électriques du vendeur vers celles de l'acheteur
-- Chaque ferme peut adhérer au dépôt ; les membres partagent son entretien quotidien
-- Seuls les gestionnaires de ferme peuvent échanger
+Les fermes achètent et vendent entre elles : électricité, lisier, fumier, vrac (céréales et autres) et marchandises en palettes, par factures et ordres permanents. L'argent ne circule qu'entre les fermes.
 
-Utilisation : achetez le Community Depot (boutique : Production > Points de vente, 268 000), puis ouvrez la page Player Trading+ dans le menu Échap.
+Ouvrez la page Player Trading+ dans le menu Échap (ou à la porte du bureau du dépôt). Appuyez sur New pour facturer une ferme, demander une facture, ou publier un ordre permanent d'achat ou de vente que toute ferme peut remplir en partie ou en totalité. Fixez votre propre prix par 1 000 litres (le prix du jeu sert de repère), une quantité fixe ou tout le stock, une remise facultative, et échangez une fois, chaque jour ou chaque semaine. Seuls les gestionnaires de ferme peuvent échanger.
 
-Changelog 0.12.1.0 :
-- Renommé Player Trading+ (anciennement Utilities & Waste Management). Factures et ordres sont conservés ; un dépôt placé sous l'ancien nom doit être replacé.
-- La description du mod est à jour.
+Tout passe par le Community Depot, le bâtiment que ce mod ajoute à la boutique. Sans dépôt sur la carte, pas d'échanges. Un dépôt par carte ; l'administrateur du serveur peut en autoriser davantage sur la page Player Trading+.
+
+Chaque autre ferme se voit proposer l'adhésion au dépôt. Les membres et le propriétaire partagent à parts égales l'entretien du dépôt, prélevé chaque jour. Un membre qui ne peut pas payer accumule une dette ; s'il termine deux mois de suite endetté, la ferme est suspendue jusqu'à ce qu'elle paie. Un membre peut partir, mais ne peut pas revenir avant 6 mois ; toute dette est prélevée sur son compte à son départ, même dans le rouge. Les fermes qui ont refusé ou qui sont suspendues ne peuvent pas échanger. Les factures déjà payées peuvent quand même être récupérées ou terminées.
+
+Les marchandises mises en vente quittent le stockage du vendeur et attendent au dépôt jusqu'à ce que l'acheteur les récupère ; les invendus retournent à la ferme. Les acheteurs paient d'avance et n'importe qui de la ferme acheteuse récupère au dépôt : le lisier au raccord de la cuve, le fumier à l'extrémité ouverte de la fosse à fumier, le vrac au tuyau du silo, les palettes sur l'aire à palettes. Les litres jamais récupérés sont remboursés à la fin de la facture. L'électricité va directement des productions électriques du vendeur vers les productions choisies par l'acheteur, et est payée à mesure qu'elle arrive.
+
+Multijoueur : tout se passe sur le serveur.
 ```
 
 ## Before uploading
 
+- Screenshots for the upload: [`modhub/screenshots/`](screenshots) (1600x900, unedited in-game shots, `1.jpg` first).
 - Translations in the mod itself: English only. The title, description and every menu, page and shop text have no German or French.

@@ -6,11 +6,15 @@
         <en>Player Trading+ Pro Edition</en>
     </title>
     <description>
-        <en><![CDATA[Farms buy and sell with each other: electricity, slurry, manure, bulk goods (grain and more) and pallet goods, through invoices and standing orders. Money only moves between farms.
+        <en><![CDATA[Category: Production > Selling Points (Community Depot)
+Price: $268,000
+Monthly upkeep: $268, shared equally by the depot's owner and member farms
+
+Farms buy and sell with each other: electricity, slurry, manure, bulk goods (grain and more) and pallet goods, through invoices and standing orders. Money only moves between farms.
 
 Open the Player Trading+ page in the ESC menu (or at the depot office door). Press New to invoice a farm, request an invoice, or post a standing buy or sell order that any farm can fill in part or in full. Set your own price per 1,000 liters (the game's price is shown as a guide), a set amount or everything in stock, an optional discount, and trade once, every day or every week. Only farm managers can trade.
 
-Everything runs through the Community Depot (shop: Production, Selling points, $268,000). Without a depot on the map there is no trading. One depot per map; the server admin can allow more on the Player Trading+ page.
+Everything runs through the Community Depot, the building this mod adds to the shop. Without a depot on the map there is no trading. One depot per map; the server admin can allow more on the Player Trading+ page.
 
 Every other farm is offered membership of the depot. Members and the owner share the depot's upkeep equally; it is taken every day. A member who can't pay builds up a debt; two months in a row ending in debt and the farm is suspended until it pays. A member can leave, but can't rejoin for 6 months; any debt is taken from its account when it leaves, even into the red. Farms that said no or are suspended can't trade. Invoices they already paid can still be collected or ended.
 
@@ -20,11 +24,15 @@ Multiplayer: everything runs on the server.
 
 Changelog 1.0.0.1:
 - Updated for the current game version (modDesc version 116).]]></en>
-        <de><![CDATA[Höfe kaufen und verkaufen untereinander: Strom, Gülle, Mist, Schüttgut (Getreide und mehr) und Palettenware, über Rechnungen und Daueraufträge. Geld fließt nur zwischen den Höfen.
+        <de><![CDATA[Kategorie: Produktion > Verkaufsstellen (Community Depot)
+Preis: 268.000 €
+Monatliche Unterhaltskosten: 268 €, zu gleichen Teilen auf Besitzer und Mitgliedshöfe des Depots verteilt
+
+Höfe kaufen und verkaufen untereinander: Strom, Gülle, Mist, Schüttgut (Getreide und mehr) und Palettenware, über Rechnungen und Daueraufträge. Geld fließt nur zwischen den Höfen.
 
 Öffne die Seite Player Trading+ im ESC-Menü (oder an der Bürotür des Depots). Drücke "New", um einem Hof eine Rechnung zu stellen, eine Rechnung anzufordern oder einen Dauerauftrag zum Kaufen oder Verkaufen einzustellen, den jeder Hof ganz oder teilweise erfüllen kann. Lege deinen eigenen Preis pro 1.000 Liter fest (der Preis des Spiels wird als Richtwert angezeigt), eine feste Menge oder den gesamten Vorrat, einen optionalen Rabatt, und handle einmalig, täglich oder wöchentlich. Nur Farmmanager können handeln.
 
-Alles läuft über das Community Depot (Shop: Produktion, Verkaufsstellen, 268.000 $). Ohne Depot auf der Karte gibt es keinen Handel. Ein Depot pro Karte; der Server-Admin kann auf der Seite Player Trading+ weitere erlauben.
+Alles läuft über das Community Depot, das Gebäude, das dieser Mod in den Shop bringt. Ohne Depot auf der Karte gibt es keinen Handel. Ein Depot pro Karte; der Server-Admin kann auf der Seite Player Trading+ weitere erlauben.
 
 Jedem anderen Hof wird die Mitgliedschaft im Depot angeboten. Mitglieder und Besitzer teilen sich die Unterhaltskosten des Depots zu gleichen Teilen; sie werden täglich abgebucht. Ein Mitglied, das nicht zahlen kann, macht Schulden; endet es zwei Monate in Folge mit Schulden, wird der Hof gesperrt, bis er zahlt. Ein Mitglied kann austreten, aber 6 Monate lang nicht wieder eintreten; offene Schulden werden beim Austritt vom Konto abgebucht, auch ins Minus. Höfe, die abgelehnt haben oder gesperrt sind, können nicht handeln. Bereits bezahlte Rechnungen können sie trotzdem noch abholen oder beenden.
 
