@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" standalone="no" ?>
 <modDesc descVersion="116">
     <author>DTM Mods, PropaineX</author>
-    <version>1.0.0.1</version>
+    <version>1.0.0.2</version>
     <title>
         <en>Player Trading+ Pro Edition</en>
     </title>
@@ -22,8 +22,9 @@ Goods put up for sale leave the seller's storage and wait in the depot until the
 
 Multiplayer: everything runs on the server.
 
-Changelog 1.0.0.1:
-- Updated for the current game version (modDesc version 116).]]></en>
+Changelog 1.0.0.2:
+- Description in GIANTS' ModHub layout (category, price, upkeep or hotkeys at the top).
+- Shop images without mipmaps, as ModHub wants.]]></en>
         <de><![CDATA[Kategorie: Produktion > Verkaufsstellen (Community Depot)
 Preis: 268.000 €
 Monatliche Unterhaltskosten: 268 €, zu gleichen Teilen auf Besitzer und Mitgliedshöfe des Depots verteilt
@@ -40,8 +41,9 @@ Zum Verkauf gestellte Waren verlassen das Lager des Verkäufers und warten im De
 
 Multiplayer: alles läuft auf dem Server.
 
-Changelog 1.0.0.1:
-- An die aktuelle Spielversion angepasst (modDesc-Version 116).]]></de>
+Changelog 1.0.0.2:
+- Beschreibung im ModHub-Aufbau von GIANTS (Kategorie, Preis, Unterhalt bzw. Tasten oben).
+- Shopbilder ohne Mipmaps, wie ModHub es verlangt.]]></de>
     </description>
     <iconFilename>icon_PlayerTradingPlus.dds</iconFilename>
     <multiplayer supported="true" />

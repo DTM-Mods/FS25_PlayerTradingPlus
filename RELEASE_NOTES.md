@@ -2,6 +2,11 @@
   <img src="https://raw.githubusercontent.com/DTM-Mods/.github/main/assets/patch-notes.jpg" alt="Patch notes" width="100%">
 </p>
 
+# 1.0.0.2
+
+- Description in GIANTS' ModHub layout (category, price, upkeep or hotkeys at the top).
+- Shop images without mipmaps, as ModHub wants.
+
 # 1.0.0.1
 
 - Updated for the current game version: modDesc descVersion 116 (the game build of 2026-10-27; GIANTS TestRunner 0.9.24 accepts only 116).
